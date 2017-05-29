@@ -72,6 +72,10 @@ PlayState.prototype.update = function () {
         this.player.animations.stop();
     }
 
+    if (!this.player.body.onFloor()) {
+        this.player.animations.stop();
+    }
+
     if (jumpButton.isDown && this.player.body.onFloor()) {
         this.player.body.velocity.y = -velocity * 2;
     }
