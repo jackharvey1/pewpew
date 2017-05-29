@@ -15,7 +15,8 @@ let cursors,
     jumpButton,
     fireButton;
 
-let facing;
+let facing,
+    hasDoubleJumped = true;
 
 const velocity = 500;
 const playerWidth = 32;
@@ -76,8 +77,11 @@ PlayState.prototype.update = function () {
         this.player.animations.stop();
     }
 
-    if (jumpButton.isDown && this.player.body.onFloor()) {
-        this.player.body.velocity.y = -velocity * 2;
+    if (jumpButton.justPressed()) {
+        if (this.player.body.onFloor() || !hasDoubleJumped) {
+            this.player.body.velocity.y -= velocity;
+            hasDoubleJumped = !hasDoubleJumped;
+        }
     }
 
     if (fireButton.isDown) {
