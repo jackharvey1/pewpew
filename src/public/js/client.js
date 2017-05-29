@@ -4,13 +4,18 @@ const PlayState = function () {
     return this;
 };
 
-const game = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO);
+const dimensions = {
+    width: window.innerWidth,
+    height: window.innerHeight
+};
+
+const game = new Phaser.Game(dimensions.width, dimensions.height, Phaser.AUTO);
 
 let cursors,
-    jumpButton;
+    jumpButton,
+    fireButton;
 
-let facing = 'left',
-    jumpTimer = 0;
+let facing;
 
 const velocity = 500;
 const playerWidth = 32;
@@ -27,15 +32,18 @@ PlayState.prototype.create = function () {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = velocity * 2;
 
-    this.player = game.add.sprite(playerWidth, playerHeight, 'player');
+    this.player = game.add.sprite(dimensions.width - 50, dimensions.height - 50, 'player');
     this.player.animations.add('move', [0, 1], 10, true);
     game.physics.enable(this.player, Phaser.Physics.ARCADE);
 
     this.player.body.collideWorldBounds = true;
     this.player.body.setSize(32, 32, 5, 16);
 
+    this.nextFireTime = 0;
+
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
 };
 
 PlayState.prototype.update = function () {
@@ -59,16 +67,39 @@ PlayState.prototype.update = function () {
             this.player.animations.play('move');
             facing = 'right';
         }
-    } else if (facing !== 'idle') {
+    } else {
+        this.player.animations.frame = 0;
         this.player.animations.stop();
-        facing = 'idle';
     }
 
-    if (jumpButton.isDown) {
-        if (this.player.body.onFloor() && game.time.now > jumpTimer) {
-            this.player.body.velocity.y = -velocity * 2;
-            jumpTimer = game.time.now + 750;
+    if (jumpButton.isDown && this.player.body.onFloor()) {
+        this.player.body.velocity.y = -velocity * 2;
+    }
+
+    if (fireButton.isDown) {
+        this.fire();
+    }
+};
+
+PlayState.prototype.fire = function () {
+    if (game.time.now > this.nextFireTime) {
+        const bullet = game.add.sprite(playerWidth, playerHeight, 'shot');
+        game.physics.enable(bullet, Phaser.Physics.ARCADE);
+
+        bullet.body.setSize(16, 16, 5, 16);
+
+        bullet.body.allowGravity = false;
+        bullet.y = this.player.y + 12;
+
+        if (facing === 'left') {
+            bullet.x = this.player.x - (playerWidth / 2);
+            bullet.body.velocity.x = -1000;
+        } else {
+            bullet.x = this.player.x;
+            bullet.body.velocity.x = 1000;
         }
+
+        this.nextFireTime = game.time.now + 100;
     }
 };
 
