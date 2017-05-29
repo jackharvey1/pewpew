@@ -5,6 +5,9 @@ module.exports = {
         "mocha": true,
         "es6": true
     },
+    "globals": {
+        "Phaser": true
+    },
     "extends": "eslint:recommended",
     "parserOptions": {
         "sourceType": "module"
