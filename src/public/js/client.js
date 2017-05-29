@@ -51,20 +51,20 @@ PlayState.prototype.update = function () {
 
     if (cursors.left.isDown) {
         this.player.body.velocity.x = -velocity;
+        this.player.animations.play('move');
 
         if (facing !== 'left') {
             this.player.scale.x = 1;
             this.player.x -= playerWidth;
-            this.player.animations.play('move');
             facing = 'left';
         }
     } else if (cursors.right.isDown) {
         this.player.body.velocity.x = velocity;
+        this.player.animations.play('move');
 
         if (facing !== 'right') {
             this.player.scale.x = -1;
             this.player.x += playerWidth;
-            this.player.animations.play('move');
             facing = 'right';
         }
     } else {
