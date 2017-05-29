@@ -1,15 +1,10 @@
 'use strict';
 
+const game = require('./game');
+
 const PlayState = function () {
     return this;
 };
-
-const dimensions = {
-    width: window.innerWidth,
-    height: window.innerHeight
-};
-
-const game = new Phaser.Game(dimensions.width, dimensions.height, Phaser.AUTO);
 
 let cursors,
     jumpButton,
@@ -33,18 +28,24 @@ PlayState.prototype.create = function () {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = velocity * 2;
 
-    this.player = game.add.sprite(dimensions.width - 50, dimensions.height - 50, 'player');
-    this.player.animations.add('move', [0, 1], 10, true);
-    game.physics.enable(this.player, Phaser.Physics.ARCADE);
-
-    this.player.body.collideWorldBounds = true;
-    this.player.body.setSize(32, 32, 5, 16);
-
-    this.nextFireTime = 0;
+    this.createPlayer();
 
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
+};
+
+PlayState.prototype.createPlayer = function () {
+    const player = game.add.sprite(window.innerWidth - 200, window.innerHeight - 200, 'player');
+    player.animations.add('move', [0, 1], 10, true);
+
+    game.physics.enable(player, Phaser.Physics.ARCADE);
+    player.body.collideWorldBounds = true;
+    player.body.setSize(32, 32, 5, 16);
+
+    player.nextFireTime = 0;
+
+    this.player = player;
 };
 
 PlayState.prototype.update = function () {
@@ -90,8 +91,8 @@ PlayState.prototype.update = function () {
 };
 
 PlayState.prototype.fire = function () {
-    if (game.time.now > this.nextFireTime) {
-        const bullet = game.add.sprite(playerWidth, playerHeight, 'shot');
+    if (game.time.now > this.player.nextFireTime) {
+        const bullet = game.add.sprite(0, 0, 'shot');
         game.physics.enable(bullet, Phaser.Physics.ARCADE);
 
         bullet.body.setSize(16, 16, 5, 16);
@@ -107,8 +108,8 @@ PlayState.prototype.fire = function () {
             bullet.body.velocity.x = 1000;
         }
 
-        this.nextFireTime = game.time.now + 100;
+        this.player.nextFireTime = game.time.now + 100;
     }
 };
 
-game.state.add('game', PlayState, true);
+module.exports = PlayState;

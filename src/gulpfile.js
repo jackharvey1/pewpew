@@ -19,12 +19,16 @@ gulp.task('lint', () => {
 
 gulp.task('js', function () {
     return browserify({
-        entries: ['./public/js/client.js'],
+        entries: [
+            './public/js/game.js',
+            './public/js/play-state.js',
+            './public/js/player.js'
+        ],
         debug: true
     })
         .transform("babelify", { presets: ["es2015"] })
         .bundle()
-        .pipe(source('client.min.js'))
+        .pipe(source('main.min.js'))
         .pipe(buffer())
         .pipe(sourcemaps.init())
         .pipe(uglify({ mangle: false }))
