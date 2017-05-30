@@ -21,6 +21,7 @@ gulp.task('js', function () {
     return browserify({
         entries: [
             './public/js/game.js',
+            './public/js/client.js',
             './public/js/config.js',
             './public/js/play-state.js',
             './public/js/player.js'

@@ -4,6 +4,7 @@ const game = require('./game');
 const config = require('./config');
 
 const Player = function () {
+    this.create();
     this.facing = 'left';
     this.hasDoubleJumped = true;
 };
