@@ -3,8 +3,8 @@
 const game = require('./game');
 const config = require('./config');
 
-const Player = function () {
-    this.create();
+const Player = function (playerId) {
+    this.id = playerId;
     this.facing = 'left';
     this.hasDoubleJumped = true;
 };
@@ -25,25 +25,31 @@ Player.prototype.create = function () {
 Player.prototype.moveLeft = function () {
     this.sprite.body.velocity.x = -config.player.velocity;
     this.sprite.animations.play('move');
-    this.sprite.scale.x = 1;
 
-    if (this.facing !== 'left') {
-        this.sprite.x -= config.player.width;
-    }
-
+    this.faceLeft();
     this.facing = 'left';
 };
 
 Player.prototype.moveRight = function () {
     this.sprite.body.velocity.x = config.player.velocity;
     this.sprite.animations.play('move');
-    this.sprite.scale.x = -1;
 
+    this.faceRight();
+    this.facing = 'right';
+};
+
+Player.prototype.faceLeft = function () {
+    if (this.facing !== 'left') {
+        this.sprite.scale.x = 1;
+        this.sprite.x -= config.player.width;
+    }
+};
+
+Player.prototype.faceRight = function () {
     if (this.facing !== 'right') {
+        this.sprite.scale.x = -1;
         this.sprite.x += config.player.width;
     }
-
-    this.facing = 'right';
 };
 
 Player.prototype.jump = function () {

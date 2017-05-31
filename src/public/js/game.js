@@ -4,4 +4,4 @@ const game = module.exports = new Phaser.Game(window.innerWidth, window.innerHei
 
 const PlayState = require('./play-state');
 
-game.state.add('game', PlayState, true);
+game.state.add('play', PlayState, true);

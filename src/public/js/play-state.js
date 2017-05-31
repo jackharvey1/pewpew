@@ -2,6 +2,7 @@
 
 const game = require('./game');
 const config = require('./config');
+const client = require('./client');
 const Player = require('./player');
 
 const PlayState = function () {
@@ -12,18 +13,20 @@ let cursors,
     jumpButton,
     fireButton;
 
+PlayState.prototype.init = function (playerId) {
+    this.player = new Player(playerId);
+    this.players = {};
+};
+
 PlayState.prototype.preload = function () {
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
     this.game.load.image('shot', 'assets/shot.png', 16, 16);
 };
 
-PlayState.prototype.initialise = function () {
-    this.player = new Player();
-    this.players = [];
-};
-
 PlayState.prototype.create = function () {
-    this.initialise();
+    client.init();
+    this.player.create();
+
     this.game.stage.backgroundColor = 0x4488CC;
 
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -34,9 +37,10 @@ PlayState.prototype.create = function () {
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
 };
 
-PlayState.prototype.addPlayer = function () {
-    const newPlayer = new Player();
-    this.players.push(newPlayer);
+PlayState.prototype.addPlayer = function (playerId) {
+    const newPlayer = new Player(playerId);
+    newPlayer.create();
+    this.players[playerId] = newPlayer;
 };
 
 PlayState.prototype.removePlayer = function (playerId) {

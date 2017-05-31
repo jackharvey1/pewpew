@@ -8,10 +8,10 @@ const morgan = require('morgan');
 const path = require('path');
 const _ = require('lodash');
 
+const gameState = {};
+
 app.use(morgan('combined'));
 app.use(express.static(path.join(__dirname, 'public')));
-
-const gameState = {};
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, './public/main.html'));
