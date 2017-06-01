@@ -39,6 +39,11 @@ PlayState.prototype.addPlayer = function () {
     this.players.push(newPlayer);
 };
 
+PlayState.prototype.removePlayer = function (playerId) {
+    this.players[playerId].sprite.destroy();
+    delete this.players[playerId];
+};
+
 PlayState.prototype.update = function () {
     if (cursors.left.isDown) {
         this.player.moveLeft();
