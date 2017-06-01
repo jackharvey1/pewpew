@@ -5,7 +5,9 @@ let socket;
 
 module.exports.init = function () {
     socket = io.connect('http://localhost:3000');
-    socket.on('player-id', () => {
+
+    socket.on('player-id', (playerId) => {
+        game.state.getCurrentState().player.id = playerId;
         setupClientTick();
         receiveServerTick();
     });
