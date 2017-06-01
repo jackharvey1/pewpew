@@ -5,9 +5,16 @@ let socket;
 
 module.exports.init = function () {
     socket = io.connect('http://localhost:3000');
+    const state = game.state.getCurrentState();
+
+    socket.on('player-list', (gameState) => {
+        Object.keys(gameState).forEach((playerId) => {
+            state.addPlayer(playerId, gameState[playerId].coordinates);
+        });
+    });
 
     socket.on('player-id', (playerId) => {
-        game.state.getCurrentState().player.id = playerId;
+        state.player.id = playerId;
         setupClientTick();
         receiveServerTick();
     });
