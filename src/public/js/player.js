@@ -6,6 +6,7 @@ const config = require('./config');
 const Player = function (playerId) {
     this.id = playerId;
     this.facing = 'left';
+    this.moving = '';
     this.hasDoubleJumped = true;
 };
 
@@ -27,6 +28,7 @@ Player.prototype.moveLeft = function () {
     this.sprite.animations.play('move');
 
     this.faceLeft();
+    this.moving = 'left';
     this.facing = 'left';
 };
 
@@ -36,6 +38,7 @@ Player.prototype.moveRight = function () {
 
     this.faceRight();
     this.facing = 'right';
+    this.moving = 'right';
 };
 
 Player.prototype.faceLeft = function () {
@@ -57,6 +60,13 @@ Player.prototype.jump = function () {
         this.sprite.body.velocity.y -= config.player.velocity;
         this.hasDoubleJumped = !this.hasDoubleJumped;
     }
+};
+
+Player.prototype.stop = function () {
+    this.moving = '';
+    this.sprite.body.velocity.x = 0;
+    this.sprite.animations.frame = 0;
+    this.sprite.animations.stop();
 };
 
 Player.prototype.fire = function () {

@@ -35,7 +35,7 @@ io.on('connection', (socket) => {
     socket.on('client-tick', (data) => {
         gameState[socket.id] = {
             facing: data.facing,
-            coordinates: data.coordinates
+            moving: data.moving
         };
     });
 });

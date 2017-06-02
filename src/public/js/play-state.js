@@ -14,6 +14,7 @@ let cursors,
     fireButton;
 
 PlayState.prototype.init = function (playerId) {
+    game.stage.disableVisibilityChange = true;
     this.player = new Player(playerId);
     this.players = {};
 };
@@ -54,9 +55,7 @@ PlayState.prototype.update = function () {
     } else if (cursors.right.isDown) {
         this.player.moveRight();
     } else {
-        this.player.sprite.body.velocity.x = 0;
-        this.player.sprite.animations.frame = 0;
-        this.player.sprite.animations.stop();
+        this.player.stop();
     }
 
     if (!this.player.sprite.body.onFloor()) {
