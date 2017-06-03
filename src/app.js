@@ -22,12 +22,15 @@ server.listen(process.env.PORT || 3000, () => {
 });
 
 io.on('connection', (socket) => {
+    console.log(`${socket.id} connected`);
+
     socket.emit('player-id', socket.id);
     socket.emit('player-list', gameState);
 
     socket.broadcast.emit('player-connected', socket.id);
 
     socket.on('disconnect', () => {
+        console.log(`${socket.id} disconnected`);
         io.sockets.emit('player-disconnected', socket.id);
         delete gameState[socket.id];
     });
