@@ -39,6 +39,7 @@ io.on('connection', (socket) => {
         gameState[socket.id] = {
             facing: data.facing,
             moving: data.moving,
+            velocity: data.velocity,
             coordinates: data.coordinates
         };
     });
@@ -50,12 +51,12 @@ io.on('connection', (socket) => {
         clientIds.forEach((clientId) => {
             io.to(clientId).emit('tick', _.omit(gameState, clientId));
         });
-    }, 20);
+    }, 10);
 
     setInterval(() => {
         const clientIds = Object.keys(io.sockets.sockets);
         clientIds.forEach((clientId) => {
             io.to(clientId).emit('client-correction', _.mapValues(gameState, 'coordinates'));
         });
-    }, 50);
+    }, 20);
 })();

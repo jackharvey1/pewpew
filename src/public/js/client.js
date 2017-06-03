@@ -26,13 +26,17 @@ function setupClientTick() {
         const msg = {
             facing: player.facing,
             moving: player.moving,
+            velocity: {
+                x: player.sprite.body.velocity.x || 0,
+                y: player.sprite.body.velocity.y || 0
+            },
             coordinates: {
                 x: player.sprite.x,
                 y: player.sprite.y
             }
         };
         socket.emit('client-tick', msg);
-    }, 20);
+    }, 10);
 }
 
 function receiveServerTick() {
@@ -50,6 +54,15 @@ function receiveServerTick() {
     socket.on('tick', (data) => {
         for (const id in data) {
             if (players[id]) {
+                players[id].sprite.body.velocity.x = data[id].velocity.x;
+                players[id].sprite.body.velocity.y = data[id].velocity.y;
+
+                if (data[id].facing === 'left') {
+                    players[id].faceLeft();
+                } else if (data[id].facing === 'right') {
+                    players[id].faceRight();
+                }
+
                 if (data[id].moving === 'left') {
                     players[id].moveLeft();
                 } else if (data[id].moving === '') {
@@ -57,8 +70,6 @@ function receiveServerTick() {
                 } else if (data[id].moving === 'right') {
                     players[id].moveRight();
                 }
-
-                players[id].facing = data[id].facing;
             }
         }
     });
