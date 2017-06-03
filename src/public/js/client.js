@@ -25,7 +25,11 @@ function setupClientTick() {
         const player = game.state.getCurrentState().player;
         const msg = {
             facing: player.facing,
-            moving: player.moving
+            moving: player.moving,
+            coordinates: {
+                x: player.sprite.x,
+                y: player.sprite.y
+            }
         };
         socket.emit('client-tick', msg);
     }, 20);
@@ -33,6 +37,8 @@ function setupClientTick() {
 
 function receiveServerTick() {
     const state = game.state.getCurrentState();
+    const players = state.players;
+
     socket.on('player-connected', (playerId) => {
         state.addPlayer(playerId);
     });
@@ -42,7 +48,6 @@ function receiveServerTick() {
     });
 
     socket.on('tick', (data) => {
-        const players = game.state.getCurrentState().players;
         for (const id in data) {
             if (players[id]) {
                 if (data[id].moving === 'left') {
@@ -54,6 +59,15 @@ function receiveServerTick() {
                 }
 
                 players[id].facing = data[id].facing;
+            }
+        }
+    });
+
+    socket.on('client-correction', (correctionData) => {
+        for (const id in correctionData) {
+            if (players[id]) {
+                players[id].sprite.x = correctionData[id].x;
+                players[id].sprite.y = correctionData[id].y;
             }
         }
     });

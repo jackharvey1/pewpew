@@ -35,14 +35,24 @@ io.on('connection', (socket) => {
     socket.on('client-tick', (data) => {
         gameState[socket.id] = {
             facing: data.facing,
-            moving: data.moving
+            moving: data.moving,
+            coordinates: data.coordinates
         };
     });
 });
 
-setInterval(() => {
-    const clientIds = Object.keys(io.sockets.sockets);
-    clientIds.forEach((clientId) => {
-        io.to(clientId).emit('tick', _.omit(gameState, clientId));
-    });
-}, 20);
+(function () {
+    setInterval(() => {
+        const clientIds = Object.keys(io.sockets.sockets);
+        clientIds.forEach((clientId) => {
+            io.to(clientId).emit('tick', _.omit(gameState, clientId));
+        });
+    }, 20);
+
+    setInterval(() => {
+        const clientIds = Object.keys(io.sockets.sockets);
+        clientIds.forEach((clientId) => {
+            io.to(clientId).emit('client-correction', _.mapValues(gameState, 'coordinates'));
+        });
+    }, 50);
+})();
