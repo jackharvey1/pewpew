@@ -26,9 +26,7 @@ Player.prototype.create = function () {
 Player.prototype.moveLeft = function () {
     this.sprite.body.velocity.x = -config.player.velocity;
 
-    if (this.sprite.body.onFloor()) {
-        this.sprite.animations.play('move');
-    }
+    this.animateWalking();
 
     this.faceLeft();
     this.moving = 'left';
@@ -37,12 +35,19 @@ Player.prototype.moveLeft = function () {
 Player.prototype.moveRight = function () {
     this.sprite.body.velocity.x = config.player.velocity;
 
-    if (this.sprite.body.onFloor()) {
-        this.sprite.animations.play('move');
-    }
+    this.animateWalking();
 
     this.faceRight();
     this.moving = 'right';
+};
+
+Player.prototype.animateWalking = function () {
+    if (this.sprite.body.onFloor()) {
+        this.sprite.animations.play('move');
+    } else {
+        this.sprite.animations.stop();
+        this.sprite.animations.frame = 0;
+    }
 };
 
 Player.prototype.faceLeft = function () {
