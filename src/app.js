@@ -6,6 +6,7 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const morgan = require('morgan');
 const path = require('path');
+const logger = require('./lib/logger');
 const _ = require('lodash');
 
 const gameState = {};
@@ -18,11 +19,11 @@ app.get('/', (req, res) => {
 });
 
 server.listen(process.env.PORT || 3000, () => {
-    console.log('Listening');
+    logger.log('Listening');
 });
 
 io.on('connection', (socket) => {
-    console.log(`${socket.id} connected`);
+    logger.log(`${socket.id} connected`);
 
     socket.emit('player-id', socket.id);
     socket.emit('player-list', gameState);
@@ -30,7 +31,7 @@ io.on('connection', (socket) => {
     socket.broadcast.emit('player-connected', socket.id);
 
     socket.on('disconnect', () => {
-        console.log(`${socket.id} disconnected`);
+        logger.log(`${socket.id} disconnected`);
         io.sockets.emit('player-disconnected', socket.id);
         delete gameState[socket.id];
     });
