@@ -21,8 +21,9 @@ module.exports.init = function () {
 };
 
 function setupClientTick() {
+    const player = game.state.getCurrentState().player;
+
     setInterval(() => {
-        const player = game.state.getCurrentState().player;
         const msg = {
             facing: player.facing,
             moving: player.moving,
@@ -52,7 +53,7 @@ function receiveServerTick() {
     });
 
     socket.on('tick', (data) => {
-        for (const id in data) {
+        Object.keys(data).forEach((id) => {
             if (players[id]) {
                 players[id].sprite.body.velocity.x = data[id].velocity.x;
                 players[id].sprite.body.velocity.y = data[id].velocity.y;
@@ -70,8 +71,10 @@ function receiveServerTick() {
                 } else if (data[id].moving === 'right') {
                     players[id].moveRight();
                 }
+            } else {
+                state.removePlayer(id);
             }
-        }
+        });
     });
 
     socket.on('client-correction', (correctionData) => {

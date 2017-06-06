@@ -48,16 +48,14 @@ io.on('connection', (socket) => {
 
 (function () {
     setInterval(() => {
-        const clientIds = Object.keys(io.sockets.sockets);
-        clientIds.forEach((clientId) => {
-            io.to(clientId).emit('tick', _.omit(gameState, clientId));
+        _.forEach(gameState, (data, id) => {
+            io.to(id).emit('tick', _.omit(gameState, id));
         });
     }, 10);
 
     setInterval(() => {
-        const clientIds = Object.keys(io.sockets.sockets);
-        clientIds.forEach((clientId) => {
-            io.to(clientId).emit('client-correction', _.mapValues(gameState, 'coordinates'));
+        _.forEach(gameState, (data, id) => {
+            io.to(id).emit('client-correction', _.mapValues(gameState, 'coordinates'));
         });
     }, 50);
 })();
