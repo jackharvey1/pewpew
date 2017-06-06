@@ -37,9 +37,15 @@ PlayState.prototype.create = function () {
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
 };
 
-PlayState.prototype.addPlayer = function (playerId) {
+PlayState.prototype.addPlayer = function (playerId, coordinates) {
     const newPlayer = new Player(playerId);
     newPlayer.create();
+
+    if (coordinates) {
+        newPlayer.sprite.x = coordinates.x;
+        newPlayer.sprite.y = coordinates.y;
+    }
+
     this.players[playerId] = newPlayer;
 };
 
