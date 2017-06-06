@@ -11,7 +11,7 @@ const Player = function (playerId) {
 };
 
 Player.prototype.create = function () {
-    const player = game.add.sprite(window.innerWidth - 200, window.innerHeight - 200, 'player');
+    const player = game.add.sprite(window.innerWidth - 200, window.innerHeight - config.player.height, 'player');
     player.animations.add('move', [0, 1], 10, true);
 
     game.physics.enable(player, Phaser.Physics.ARCADE);
