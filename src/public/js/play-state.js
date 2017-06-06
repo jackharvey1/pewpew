@@ -13,10 +13,8 @@ let cursors,
     jumpButton,
     fireButton;
 
-PlayState.prototype.init = function (playerId) {
+PlayState.prototype.init = function () {
     game.stage.disableVisibilityChange = true;
-    this.player = new Player(playerId);
-    this.players = {};
 };
 
 PlayState.prototype.preload = function () {
@@ -25,8 +23,9 @@ PlayState.prototype.preload = function () {
 };
 
 PlayState.prototype.create = function () {
+    this.player = new Player();
+    window.players = this.players = {};
     client.init();
-    this.player.create();
 
     this.game.stage.backgroundColor = 0x4488CC;
 

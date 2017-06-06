@@ -77,8 +77,20 @@ function receiveServerTick() {
     socket.on('client-correction', (correctionData) => {
         for (const id in correctionData) {
             if (players[id]) {
-                players[id].sprite.x = correctionData[id].x;
-                players[id].sprite.y = correctionData[id].y;
+                const xDiff = players[id].sprite.x - correctionData[id].x;
+                const yDiff = players[id].sprite.y - correctionData[id].y;
+
+                if (Math.abs(xDiff) > 5) {
+                    players[id].sprite.x -= xDiff / 5;
+                } else {
+                    players[id].sprite.x = correctionData[id].x;
+                }
+
+                if (Math.abs(yDiff) > 5) {
+                    players[id].sprite.y -= yDiff / 5;
+                } else {
+                    players[id].sprite.y = correctionData[id].y;
+                }
             }
         }
     });

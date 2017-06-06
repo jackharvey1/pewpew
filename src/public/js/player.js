@@ -4,6 +4,8 @@ const game = require('./game');
 const config = require('./config');
 
 const Player = function (playerId) {
+    this.create();
+
     this.id = playerId;
     this.facing = 'left';
     this.moving = '';

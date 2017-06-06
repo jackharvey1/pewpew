@@ -59,5 +59,5 @@ io.on('connection', (socket) => {
         clientIds.forEach((clientId) => {
             io.to(clientId).emit('client-correction', _.mapValues(gameState, 'coordinates'));
         });
-    }, 20);
+    }, 50);
 })();
