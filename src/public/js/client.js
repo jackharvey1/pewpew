@@ -77,6 +77,10 @@ function receiveServerTick() {
         });
     });
 
+    socket.on('player-shot', (data) => {
+        state.createShot(data.x, data.y, data.direction);
+    });
+
     socket.on('client-correction', (correctionData) => {
         for (const id in correctionData) {
             if (players[id]) {
@@ -98,3 +102,7 @@ function receiveServerTick() {
         }
     });
 }
+
+module.exports.transmitShot = function (x, y, direction) {
+    socket.emit('client-shot', { x, y, direction });
+};

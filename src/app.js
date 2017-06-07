@@ -10,6 +10,7 @@ const logger = require('./lib/logger');
 const _ = require('lodash');
 
 const gameState = {};
+const nextFireTimes = {};
 
 app.use(morgan('combined'));
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,6 +26,7 @@ server.listen(process.env.PORT || 3000, () => {
 io.on('connection', (socket) => {
     logger.log(`${socket.id} connected`);
 
+    nextFireTimes[socket.id] = 0;
     socket.emit('player-id', socket.id);
     socket.emit('player-list', gameState);
 
@@ -43,6 +45,19 @@ io.on('connection', (socket) => {
             velocity: data.velocity,
             coordinates: data.coordinates
         };
+    });
+
+    socket.on('client-shot', (data) => {
+        const unixTime = +(new Date());
+        if (nextFireTimes[socket.id] < unixTime) {
+            socket.broadcast.emit('player-shot', {
+                x: data.x,
+                y: data.y,
+                direction: data.direction
+            });
+
+            nextFireTimes[socket.id] = unixTime + 100;
+        }
     });
 });
 

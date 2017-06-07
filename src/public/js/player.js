@@ -2,6 +2,7 @@
 
 const game = require('./game');
 const config = require('./config');
+const client = require('./client');
 
 const Player = function (playerId) {
     this.create();
@@ -84,23 +85,18 @@ Player.prototype.stop = function () {
 
 Player.prototype.fire = function () {
     if (game.time.now > this.sprite.nextFireTime) {
-        const bullet = game.add.sprite(0, 0, 'shot');
-        game.physics.enable(bullet, Phaser.Physics.ARCADE);
-
-        bullet.body.setSize(16, 16, 5, 16);
-
-        bullet.body.allowGravity = false;
-        bullet.y = this.sprite.y + 12;
-
+        let x;
         if (this.facing === 'left') {
-            bullet.x = this.sprite.x - (config.player.width / 2);
-            bullet.body.velocity.x = -1000;
+            x = this.sprite.x - (config.player.width / 2);
         } else {
-            bullet.x = this.sprite.x;
-            bullet.body.velocity.x = 1000;
+            x = this.sprite.x;
         }
 
+        game.state.getCurrentState().createShot(x, this.sprite.y, this.facing);
+
         this.sprite.nextFireTime = game.time.now + 100;
+
+        client.transmitShot(x, this.sprite.y, this.facing);
     }
 };
 

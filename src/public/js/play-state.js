@@ -37,23 +37,6 @@ PlayState.prototype.create = function () {
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
 };
 
-PlayState.prototype.addPlayer = function (playerId, coordinates) {
-    const newPlayer = new Player(playerId);
-    newPlayer.create();
-
-    if (coordinates) {
-        newPlayer.sprite.x = coordinates.x;
-        newPlayer.sprite.y = coordinates.y;
-    }
-
-    this.players[playerId] = newPlayer;
-};
-
-PlayState.prototype.removePlayer = function (playerId) {
-    this.players[playerId].sprite.destroy();
-    delete this.players[playerId];
-};
-
 PlayState.prototype.update = function () {
     if (cursors.left.isDown) {
         this.player.moveLeft();
@@ -73,6 +56,41 @@ PlayState.prototype.update = function () {
 
     if (fireButton.isDown) {
         this.player.fire();
+    }
+};
+
+
+PlayState.prototype.addPlayer = function (playerId, coordinates) {
+    const newPlayer = new Player(playerId);
+    newPlayer.create();
+
+    if (coordinates) {
+        newPlayer.sprite.x = coordinates.x;
+        newPlayer.sprite.y = coordinates.y;
+    }
+
+    this.players[playerId] = newPlayer;
+};
+
+PlayState.prototype.removePlayer = function (playerId) {
+    this.players[playerId].sprite.destroy();
+    delete this.players[playerId];
+};
+
+PlayState.prototype.createShot = function (x, y, direction) {
+    const bullet = game.add.sprite(0, 0, 'shot');
+    bullet.y = y;
+    bullet.x = x;
+
+    game.physics.enable(bullet, Phaser.Physics.ARCADE);
+    bullet.body.setSize(16, 16, 5, 16);
+
+    bullet.body.allowGravity = false;
+
+    if (direction === 'left') {
+        bullet.body.velocity.x = -1000;
+    } else if (direction === 'right') {
+        bullet.body.velocity.x = 1000;
     }
 };
 
