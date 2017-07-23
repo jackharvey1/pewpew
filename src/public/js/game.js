@@ -1,6 +1,11 @@
 'use strict';
 
-const game = module.exports = new Phaser.Game(window.innerWidth, window.innerHeight, Phaser.AUTO);
+const config = require('../../config');
+const game = module.exports = new Phaser.Game(
+    Math.min(window.innerWidth, config.world.width),
+    Math.min(window.innerHeight, config.world.height),
+    Phaser.AUTO
+);
 
 const PlayState = require('./play-state');
 

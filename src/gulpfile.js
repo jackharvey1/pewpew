@@ -22,7 +22,6 @@ gulp.task('js', function () {
         entries: [
             './public/js/game.js',
             './public/js/client.js',
-            './public/js/config.js',
             './public/js/play-state.js',
             './public/js/player.js'
         ],
@@ -50,7 +49,7 @@ gulp.task('server', ['build'], function () {
 });
 
 gulp.task('watch', ['build'], function() {
-    gulp.watch('./public/js/*.js', ['js']);
+    gulp.watch('./public/**/*.js', ['js']);
 });
 
 gulp.task('default', ['server', 'watch']);

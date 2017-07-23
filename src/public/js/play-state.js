@@ -1,7 +1,7 @@
 'use strict';
 
 const game = require('./game');
-const config = require('./config');
+const config = require('../../config');
 const client = require('./client');
 const Player = require('./player');
 
@@ -13,18 +13,25 @@ let cursors,
     jumpButton,
     fireButton;
 
-PlayState.prototype.init = function () {
-    game.stage.disableVisibilityChange = true;
-};
-
 PlayState.prototype.preload = function () {
+    this.game.stage.disableVisibilityChange = true;
+    this.game.world.setBounds(0, 0, config.world.width, config.world.height);
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
     this.game.load.image('shot', 'assets/shot.png', 16, 16);
 };
 
 PlayState.prototype.create = function () {
     this.player = new Player();
-    window.players = this.players = {};
+    this.players = {};
+
+    this.game.camera.follow(this.player.sprite);
+    this.game.camera.deadzone = new Phaser.Rectangle(
+        200,
+        0,
+        window.innerWidth - 400,
+        window.innerHeight - 200
+    );
+
     client.init();
 
     this.game.stage.backgroundColor = 0x4488CC;
@@ -83,6 +90,7 @@ PlayState.prototype.createShot = function (x, y, direction) {
     bullet.x = x;
 
     game.physics.enable(bullet, Phaser.Physics.ARCADE);
+    bullet.anchor.setTo(0.5, 0.5);
     bullet.body.setSize(16, 16, 5, 16);
 
     bullet.body.allowGravity = false;
