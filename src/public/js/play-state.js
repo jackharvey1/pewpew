@@ -17,6 +17,7 @@ PlayState.prototype.preload = function () {
     this.game.stage.disableVisibilityChange = true;
     this.game.world.setBounds(0, 0, config.world.width, config.world.height);
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
+    this.game.load.image('cloud', 'assets/cloud.png', 100, 60);
     this.game.load.image('shot', 'assets/shot.png', 16, 16);
 };
 
@@ -35,6 +36,12 @@ PlayState.prototype.create = function () {
     client.init();
 
     this.game.stage.backgroundColor = 0x4488CC;
+
+    for (let i = 0; i < 10; i++) {
+        const x = Math.random() * this.game.world.bounds.width;
+        const y = Math.random() * (this.game.world.bounds.height - 600);
+        this.game.add.image(x, y, 'cloud');
+    }
 
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = config.gravity;
