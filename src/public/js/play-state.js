@@ -1,6 +1,7 @@
 'use strict';
 
 const game = require('./game');
+const utils = require('./utils');
 const config = require('../../common/config');
 const client = require('./client');
 const Player = require('./player');
@@ -18,7 +19,7 @@ PlayState.prototype.preload = function () {
     this.game.world.setBounds(0, 0, config.world.width, config.world.height);
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
     this.game.load.image('cloud', 'assets/cloud.png', 100, 60);
-    this.game.load.image('shot', 'assets/shot.png', 16, 16);
+    this.game.load.image('shot', 'assets/shot.png', config.shot.diameter, config.shot.diameter);
 };
 
 PlayState.prototype.create = function () {
@@ -91,21 +92,21 @@ PlayState.prototype.removePlayer = function (playerId) {
     delete this.players[playerId];
 };
 
-PlayState.prototype.createShot = function (x, y, direction) {
+PlayState.prototype.createShot = function (x, y, time, direction) {
     const bullet = game.add.sprite(0, 0, 'shot');
-    bullet.y = y;
-    bullet.x = x;
+    bullet.x = utils.extrapolateOrdinate(x, config.shot.velocity, time);
+    bullet.y = utils.extrapolateOrdinate(y, 0, time);
 
     game.physics.enable(bullet, Phaser.Physics.ARCADE);
     bullet.anchor.setTo(0.5, 0.5);
-    bullet.body.setSize(16, 16, 5, 16);
+    bullet.body.setSize(config.shot.diameter, config.shot.diameter);
 
     bullet.body.allowGravity = false;
 
     if (direction === 'left') {
-        bullet.body.velocity.x = -1000;
+        bullet.body.velocity.x = -config.shot.velocity;
     } else if (direction === 'right') {
-        bullet.body.velocity.x = 1000;
+        bullet.body.velocity.x = config.shot.velocity;
     }
 };
 

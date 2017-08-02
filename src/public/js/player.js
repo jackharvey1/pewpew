@@ -2,12 +2,12 @@
 
 const game = require('./game');
 const config = require('../../common/config');
-const client = require('./client');
 
 const Player = function (playerId) {
     this.create();
 
     this.id = playerId;
+    this.shots = [];
     this.facing = 'left';
     this.moving = '';
     this.hasDoubleJumped = true;
@@ -84,19 +84,18 @@ Player.prototype.stop = function () {
 };
 
 Player.prototype.fire = function () {
-    if (game.time.now > this.sprite.nextFireTime) {
-        let x;
-        if (this.facing === 'left') {
-            x = this.sprite.x - (config.player.width / 2);
-        } else {
-            x = this.sprite.x + (config.player.width / 2);
-        }
+    const currentUnixTime = +(new Date());
+    if (currentUnixTime > this.sprite.nextFireTime) {
+        game.state.getCurrentState().createShot(this.sprite.x, this.sprite.y, currentUnixTime, this.facing);
 
-        game.state.getCurrentState().createShot(x, this.sprite.y, this.facing);
+        this.sprite.nextFireTime = currentUnixTime + config.shot.delay;
 
-        this.sprite.nextFireTime = game.time.now + 100;
-
-        client.transmitShot(x, this.sprite.y, this.facing);
+        this.shots.push({
+            x: this.sprite.x,
+            y: this.sprite.y,
+            time: currentUnixTime,
+            direction: this.facing
+        });
     }
 };
 

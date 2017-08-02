@@ -1,6 +1,7 @@
 'use strict';
 
 const game = require('./game');
+const utils = require('./utils');
 let socket;
 
 module.exports.init = function () {
@@ -24,19 +25,24 @@ function setupClientTick() {
     const player = game.state.getCurrentState().player;
 
     setInterval(() => {
+        const currentUnixTime = +(new Date());
         const msg = {
-            facing: player.facing,
-            moving: player.moving,
+            time: currentUnixTime,
+            shots: player.shots,
+            coordinates: {
+                x: player.sprite.x,
+                y: player.sprite.y
+            },
             velocity: {
                 x: player.sprite.body.velocity.x || 0,
                 y: player.sprite.body.velocity.y || 0
             },
-            coordinates: {
-                x: player.sprite.x,
-                y: player.sprite.y
-            }
+            facing: player.facing,
+            moving: player.moving
         };
+
         socket.emit('client-tick', msg);
+        player.shots = [];
     }, 10);
 }
 
@@ -74,11 +80,11 @@ function receiveServerTick() {
             } else {
                 state.removePlayer(id);
             }
-        });
-    });
 
-    socket.on('player-shot', (data) => {
-        state.createShot(data.x, data.y, data.direction);
+            data[id].shots.forEach((shot) => {
+                state.createShot(shot.x, shot.y, shot.time, shot.direction);
+            });
+        });
     });
 
     socket.on('client-correction', (correctionData) => {
@@ -90,7 +96,7 @@ function receiveServerTick() {
                 const yDiffCritical = Math.abs(yDiff) > 10;
 
                 if (xDiffCritical) {
-                    players[id].sprite.x = extrapolateOrdinate(
+                    players[id].sprite.x = utils.extrapolateOrdinate(
                         correctionData[id].coordinates.x,
                         correctionData[id].velocity.x,
                         correctionData[id].time
@@ -100,7 +106,7 @@ function receiveServerTick() {
                 }
 
                 if (yDiffCritical) {
-                    players[id].sprite.y = extrapolateOrdinate(
+                    players[id].sprite.y = utils.extrapolateOrdinate(
                         correctionData[id].coordinates.y,
                         correctionData[id].velocity.y,
                         correctionData[id].time
@@ -111,12 +117,6 @@ function receiveServerTick() {
             }
         });
     });
-}
-
-function extrapolateOrdinate(oldOrdinate, ordinateVelocity, time) {
-    const currentUnixTime = +(new Date());
-    const timeDifference = (currentUnixTime - time) / 1000;
-    return oldOrdinate + (ordinateVelocity * timeDifference);
 }
 
 module.exports.transmitShot = function (x, y, direction) {

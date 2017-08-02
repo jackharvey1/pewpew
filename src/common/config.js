@@ -3,6 +3,11 @@ module.exports = {
         width: 2000,
         height: 800
     },
+    shot: {
+        diameter: 16,
+        velocity: 1000,
+        delay: 100
+    },
     player: {
         width: 32,
         height: 48,
