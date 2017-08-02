@@ -6,7 +6,7 @@ const httpServer = require('http').createServer(app);
 const io = require('socket.io')(httpServer);
 const morgan = require('morgan');
 const path = require('path');
-const logger = require('./lib/logger');
+const logger = require('./common/logger');
 const server = require('./lib/server');
 
 app.use(morgan('combined'));

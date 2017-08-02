@@ -82,25 +82,41 @@ function receiveServerTick() {
     });
 
     socket.on('client-correction', (correctionData) => {
-        for (const id in correctionData) {
+        Object.keys(correctionData).forEach((id) => {
             if (players[id]) {
-                const xDiff = players[id].sprite.x - correctionData[id].x;
-                const yDiff = players[id].sprite.y - correctionData[id].y;
+                const xDiff = players[id].sprite.x - correctionData[id].coordinates.x;
+                const yDiff = players[id].sprite.y - correctionData[id].coordinates.y;
+                const xDiffCritical = Math.abs(xDiff) > 10;
+                const yDiffCritical = Math.abs(yDiff) > 10;
 
-                if (Math.abs(xDiff) > 5) {
-                    players[id].sprite.x -= xDiff / 5;
+                if (xDiffCritical) {
+                    players[id].sprite.x = extrapolateOrdinate(
+                        correctionData[id].coordinates.x,
+                        correctionData[id].velocity.x,
+                        correctionData[id].time
+                    );
                 } else {
-                    players[id].sprite.x = correctionData[id].x;
+                    players[id].sprite.x -= xDiff / 5;
                 }
 
-                if (Math.abs(yDiff) > 5) {
-                    players[id].sprite.y -= yDiff / 5;
+                if (yDiffCritical) {
+                    players[id].sprite.y = extrapolateOrdinate(
+                        correctionData[id].coordinates.y,
+                        correctionData[id].velocity.y,
+                        correctionData[id].time
+                    );
                 } else {
-                    players[id].sprite.y = correctionData[id].y;
+                    players[id].sprite.y -= yDiff / 5;
                 }
             }
-        }
+        });
     });
+}
+
+function extrapolateOrdinate(oldOrdinate, ordinateVelocity, time) {
+    const currentUnixTime = +(new Date());
+    const timeDifference = (currentUnixTime - time) / 1000;
+    return oldOrdinate + (ordinateVelocity * timeDifference);
 }
 
 module.exports.transmitShot = function (x, y, direction) {

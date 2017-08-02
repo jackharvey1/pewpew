@@ -1,7 +1,7 @@
 'use strict';
 
 const game = require('./game');
-const config = require('../../config');
+const config = require('../../common/config');
 const client = require('./client');
 
 const Player = function (playerId) {
@@ -58,7 +58,6 @@ Player.prototype.animateWalking = function () {
 Player.prototype.faceLeft = function () {
     if (this.facing !== 'left') {
         this.sprite.scale.x = 1;
-        this.sprite.x -= config.player.width;
         this.facing = 'left';
     }
 };
@@ -66,7 +65,6 @@ Player.prototype.faceLeft = function () {
 Player.prototype.faceRight = function () {
     if (this.facing !== 'right') {
         this.sprite.scale.x = -1;
-        this.sprite.x += config.player.width;
         this.facing = 'right';
     }
 };
