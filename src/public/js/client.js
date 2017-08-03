@@ -8,13 +8,13 @@ module.exports.init = function () {
     socket = io.connect('http://localhost:3000');
     const state = game.state.getCurrentState();
 
-    socket.on('player-list', (gameState) => {
+    socket.on('server:player-list', (gameState) => {
         Object.keys(gameState).forEach((playerId) => {
             state.addPlayer(playerId, gameState[playerId].coordinates);
         });
     });
 
-    socket.on('player-id', (playerId) => {
+    socket.on('server:player-id', (playerId) => {
         state.player.id = playerId;
         setupClientTick();
         receiveServerTick();
@@ -37,7 +37,7 @@ function setupClientTick() {
                 y: player.sprite.y
             }
         };
-        socket.emit('client-tick', msg);
+        socket.emit('client:tick', msg);
     }, 10);
 }
 
@@ -45,15 +45,15 @@ function receiveServerTick() {
     const state = game.state.getCurrentState();
     const players = state.players;
 
-    socket.on('player-connected', (playerId) => {
+    socket.on('server:player-connected', (playerId) => {
         state.addPlayer(playerId);
     });
 
-    socket.on('player-disconnected', (playerId) => {
+    socket.on('server:player-disconnected', (playerId) => {
         state.removePlayer(playerId);
     });
 
-    socket.on('tick', (data) => {
+    socket.on('server:tick', (data) => {
         Object.keys(data).forEach((id) => {
             if (players[id]) {
                 players[id].sprite.body.velocity.x = data[id].velocity.x;
@@ -78,11 +78,11 @@ function receiveServerTick() {
         });
     });
 
-    socket.on('player-shot', (data) => {
+    socket.on('server:shot', (data) => {
         state.createShot(data.x, data.y, data.time, data.direction);
     });
 
-    socket.on('client-correction', (correctionData) => {
+    socket.on('server:corrections', (correctionData) => {
         Object.keys(correctionData).forEach((id) => {
             if (players[id]) {
                 const xDiff = players[id].sprite.x - correctionData[id].coordinates.x;
@@ -115,5 +115,5 @@ function receiveServerTick() {
 }
 
 module.exports.transmitShot = function (x, y, direction) {
-    socket.emit('client-shot', { x, y, direction });
+    socket.emit('client:shot', { x, y, direction });
 };
