@@ -6,7 +6,7 @@ const scoreboard = require('./scoreboard');
 let socket;
 
 module.exports.init = function () {
-    socket = io.connect('http://localhost:3000');
+    socket = io.connect(window.location.host);
     const state = game.state.getCurrentState();
 
     socket.on('server:player-list', (gameState) => {
