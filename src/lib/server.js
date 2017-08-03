@@ -46,17 +46,29 @@ module.exports.init = function (io) {
                 nextFireTimes[socket.id] = currentUnixTime + 100;
             }
         });
+
+        socket.on('dong', (latency) => {
+            io.sockets.emit('server:player-latency', {
+                id: socket.id,
+                latency: latency
+            });
+        });
     });
 
     setInterval(() => {
-        _.forEach(gameState, (data, id) => {
+        Object.keys(gameState).forEach((id) => {
             io.to(id).emit('server:tick', _.omit(gameState, id));
         });
     }, 10);
 
     setInterval(() => {
-        _.forEach(gameState, (data, id) => {
-            io.to(id).emit('server:corrections', gameState);
+        Object.keys(gameState).forEach((id) => {
+            io.to(id).emit('server:correction', _.omit(gameState, id));
         });
     }, 50);
+
+    setInterval(() => {
+        const currentUnixTime = +(new Date());
+        io.sockets.emit('ding', currentUnixTime);
+    }, 5 * 1000);
 };

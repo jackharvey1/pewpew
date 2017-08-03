@@ -21,6 +21,15 @@ module.exports.init = function () {
         setupClientTick();
         receiveServerTick();
     });
+
+    socket.on('server:player-latency', ({ id, latency }) => {
+        scoreboard.updatePlayerLatency(id, latency);
+    });
+
+    socket.on('ding', (timeSent) => {
+        const currentUnixTime = +(new Date());
+        socket.emit('dong', currentUnixTime - timeSent);
+    });
 };
 
 function setupClientTick() {

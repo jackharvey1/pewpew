@@ -24,6 +24,15 @@ module.exports.removePlayer = function (id) {
     row.parentNode.removeChild(row);
 };
 
+module.exports.updatePlayerLatency = function (id, latency) {
+    const row = document.getElementById(id);
+    const latencyElement = row.getElementsByClassName('Scoreboard-latency')[0];
+    latencyElement.textContent = latency;
+};
+
 function generateRow(id) {
-    return `<div id=${id} class="Scoreboard-row">${id}</div>`;
+    return `<div id=${id} class="Scoreboard-row">
+        <span>${id}</span>
+        <span class="Scoreboard-latency"></span>
+    </div>`;
 }
