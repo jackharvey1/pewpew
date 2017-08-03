@@ -25,24 +25,19 @@ function setupClientTick() {
     const player = game.state.getCurrentState().player;
 
     setInterval(() => {
-        const currentUnixTime = +(new Date());
         const msg = {
-            time: currentUnixTime,
-            shots: player.shots,
-            coordinates: {
-                x: player.sprite.x,
-                y: player.sprite.y
-            },
+            facing: player.facing,
+            moving: player.moving,
             velocity: {
                 x: player.sprite.body.velocity.x || 0,
                 y: player.sprite.body.velocity.y || 0
             },
-            facing: player.facing,
-            moving: player.moving
+            coordinates: {
+                x: player.sprite.x,
+                y: player.sprite.y
+            }
         };
-
         socket.emit('client-tick', msg);
-        player.shots = [];
     }, 10);
 }
 
@@ -80,11 +75,11 @@ function receiveServerTick() {
             } else {
                 state.removePlayer(id);
             }
-
-            data[id].shots.forEach((shot) => {
-                state.createShot(shot.x, shot.y, shot.time, shot.direction);
-            });
         });
+    });
+
+    socket.on('player-shot', (data) => {
+        state.createShot(data.x, data.y, data.time, data.direction);
     });
 
     socket.on('client-correction', (correctionData) => {

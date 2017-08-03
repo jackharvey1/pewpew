@@ -2,12 +2,12 @@
 
 const game = require('./game');
 const config = require('../../common/config');
+const client = require('./client');
 
 const Player = function (playerId) {
     this.create();
 
     this.id = playerId;
-    this.shots = [];
     this.facing = 'left';
     this.moving = '';
     this.hasDoubleJumped = true;
@@ -90,12 +90,7 @@ Player.prototype.fire = function () {
 
         this.sprite.nextFireTime = currentUnixTime + config.shot.delay;
 
-        this.shots.push({
-            x: this.sprite.x,
-            y: this.sprite.y,
-            time: currentUnixTime,
-            direction: this.facing
-        });
+        client.transmitShot(this.sprite.x, this.sprite.y, this.facing);
     }
 };
 

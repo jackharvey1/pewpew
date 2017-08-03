@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const logger = require('../common/logger');
-const config = require('../common/config');
 
 const gameState = {};
 const nextFireTimes = {};
@@ -24,16 +23,28 @@ module.exports.init = function (io) {
         });
 
         socket.on('client-tick', (data) => {
-            const shots = cleanShots(data.shots);
-
+            const currentUnixTime = +(new Date());
             gameState[socket.id] = {
-                time: data.time,
-                shots: shots,
+                time: currentUnixTime,
                 facing: data.facing,
                 moving: data.moving,
                 velocity: data.velocity,
                 coordinates: data.coordinates
             };
+        });
+
+        socket.on('client-shot', (data) => {
+            const currentUnixTime = +(new Date());
+            if (nextFireTimes[socket.id] < currentUnixTime) {
+                socket.broadcast.emit('player-shot', {
+                    x: data.x,
+                    y: data.y,
+                    time: currentUnixTime,
+                    direction: data.direction
+                });
+
+                nextFireTimes[socket.id] = currentUnixTime + 100;
+            }
         });
     });
 
@@ -49,18 +60,3 @@ module.exports.init = function (io) {
         });
     }, 50);
 };
-
-function cleanShots(shots) {
-    let i = 0;
-    shots.sort((x, y) => x < y ? -1 : 1);
-
-    while (i < shots.length - 1) {
-        if (shots[i + 1] - shots[i] < config.shot.delay) {
-            shots.splice(i, 1);
-        } else {
-            i++;
-        }
-    }
-
-    return shots;
-}
