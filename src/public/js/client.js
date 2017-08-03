@@ -2,6 +2,7 @@
 
 const game = require('./game');
 const utils = require('./utils');
+const scoreboard = require('./scoreboard');
 let socket;
 
 module.exports.init = function () {
@@ -16,6 +17,7 @@ module.exports.init = function () {
 
     socket.on('server:player-id', (playerId) => {
         state.player.id = playerId;
+        scoreboard.addPlayer(playerId);
         setupClientTick();
         receiveServerTick();
     });
@@ -50,6 +52,7 @@ function receiveServerTick() {
     });
 
     socket.on('server:player-disconnected', (playerId) => {
+        scoreboard.removePlayer(playerId);
         state.removePlayer(playerId);
     });
 

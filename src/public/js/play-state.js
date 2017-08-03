@@ -4,6 +4,7 @@ const game = require('./game');
 const utils = require('./utils');
 const config = require('../../common/config');
 const client = require('./client');
+const scoreboard = require('./scoreboard');
 const Player = require('./player');
 
 const PlayState = function () {
@@ -12,7 +13,8 @@ const PlayState = function () {
 
 let cursors,
     jumpButton,
-    fireButton;
+    fireButton,
+    scoreboardButton;
 
 PlayState.prototype.preload = function () {
     this.game.stage.disableVisibilityChange = true;
@@ -20,6 +22,8 @@ PlayState.prototype.preload = function () {
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
     this.game.load.image('cloud', 'assets/cloud.png', 100, 60);
     this.game.load.image('shot', 'assets/shot.png', config.shot.diameter, config.shot.diameter);
+
+    scoreboard.init();
 };
 
 PlayState.prototype.create = function () {
@@ -50,6 +54,9 @@ PlayState.prototype.create = function () {
     cursors = game.input.keyboard.createCursorKeys();
     jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
+    scoreboardButton = game.input.keyboard.addKey(Phaser.Keyboard.Q);
+    scoreboardButton.onDown.add(scoreboard.show, this);
+    scoreboardButton.onUp.add(scoreboard.hide, this);
 };
 
 PlayState.prototype.update = function () {
@@ -74,7 +81,6 @@ PlayState.prototype.update = function () {
     }
 };
 
-
 PlayState.prototype.addPlayer = function (playerId, coordinates) {
     const newPlayer = new Player(playerId);
     newPlayer.create();
@@ -85,11 +91,14 @@ PlayState.prototype.addPlayer = function (playerId, coordinates) {
     }
 
     this.players[playerId] = newPlayer;
+
+    scoreboard.addPlayer(playerId);
 };
 
 PlayState.prototype.removePlayer = function (playerId) {
     this.players[playerId].sprite.destroy();
     delete this.players[playerId];
+    scoreboard.removePlayer(playerId);
 };
 
 PlayState.prototype.createShot = function (x, y, time, direction) {

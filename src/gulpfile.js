@@ -49,7 +49,7 @@ gulp.task('server', ['build'], function () {
 });
 
 gulp.task('watch', ['build'], function() {
-    gulp.watch('./public/**/*.js', ['js']);
+    gulp.watch('./**/*.js', ['js']);
 });
 
 gulp.task('default', ['server', 'watch']);

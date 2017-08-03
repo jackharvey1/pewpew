@@ -1,7 +1,7 @@
 module.exports = {
     world: {
-        width: 2000,
-        height: 800
+        width: 4096,
+        height: 2160
     },
     shot: {
         diameter: 16,
