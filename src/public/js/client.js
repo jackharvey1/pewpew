@@ -12,6 +12,7 @@ module.exports.init = function () {
     socket.on('server:player-list', (gameState) => {
         Object.keys(gameState).forEach((playerId) => {
             state.addPlayer(playerId, gameState[playerId].coordinates);
+            scoreboard.addPlayer(playerId);
         });
     });
 
