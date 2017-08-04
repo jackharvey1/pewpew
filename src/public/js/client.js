@@ -18,8 +18,8 @@ module.exports.init = function () {
     socket.on('server:player-id', (playerId) => {
         state.player.id = playerId;
         scoreboard.addPlayer(playerId);
-        setupClientTick();
-        receiveServerTick();
+        beginClientTick();
+        beginListeningToServer();
     });
 
     socket.on('server:player-latency', ({ id, latency }) => {
@@ -32,7 +32,7 @@ module.exports.init = function () {
     });
 };
 
-function setupClientTick() {
+function beginClientTick() {
     const player = game.state.getCurrentState().player;
 
     setInterval(() => {
@@ -52,77 +52,84 @@ function setupClientTick() {
     }, 10);
 }
 
-function receiveServerTick() {
+function beginListeningToServer() {
     const state = game.state.getCurrentState();
-    const players = state.players;
 
-    socket.on('server:player-connected', (playerId) => {
-        state.addPlayer(playerId);
-    });
+    socket.on('server:player-connected', state.addPlayer);
 
     socket.on('server:player-disconnected', (playerId) => {
         scoreboard.removePlayer(playerId);
         state.removePlayer(playerId);
     });
 
-    socket.on('server:tick', (data) => {
-        Object.keys(data).forEach((id) => {
-            if (players[id]) {
-                players[id].sprite.body.velocity.x = data[id].velocity.x;
-                players[id].sprite.body.velocity.y = data[id].velocity.y;
-
-                if (data[id].facing === 'left') {
-                    players[id].faceLeft();
-                } else if (data[id].facing === 'right') {
-                    players[id].faceRight();
-                }
-
-                if (data[id].moving === 'left') {
-                    players[id].moveLeft();
-                } else if (data[id].moving === '') {
-                    players[id].stop();
-                } else if (data[id].moving === 'right') {
-                    players[id].moveRight();
-                }
-            } else {
-                state.removePlayer(id);
-            }
-        });
-    });
+    socket.on('server:tick', handleServerTick);
 
     socket.on('server:shot', (data) => {
         state.createShot(data.x, data.y, data.time, data.direction);
     });
 
-    socket.on('server:corrections', (correctionData) => {
-        Object.keys(correctionData).forEach((id) => {
-            if (players[id]) {
-                const xDiff = players[id].sprite.x - correctionData[id].coordinates.x;
-                const yDiff = players[id].sprite.y - correctionData[id].coordinates.y;
-                const xDiffCritical = Math.abs(xDiff) > 10;
-                const yDiffCritical = Math.abs(yDiff) > 10;
+    socket.on('server:corrections', handleCorrectionData);
+}
 
-                if (xDiffCritical) {
-                    players[id].sprite.x = utils.extrapolateOrdinate(
-                        correctionData[id].coordinates.x,
-                        correctionData[id].velocity.x,
-                        correctionData[id].time
-                    );
-                } else {
-                    players[id].sprite.x -= xDiff / 5;
-                }
+function handleServerTick(data) {
+    const state = game.state.getCurrentState();
+    const players = state.players;
 
-                if (yDiffCritical) {
-                    players[id].sprite.y = utils.extrapolateOrdinate(
-                        correctionData[id].coordinates.y,
-                        correctionData[id].velocity.y,
-                        correctionData[id].time
-                    );
-                } else {
-                    players[id].sprite.y -= yDiff / 5;
-                }
+    Object.keys(data).forEach((id) => {
+        if (players[id]) {
+            players[id].sprite.body.velocity.x = data[id].velocity.x;
+            players[id].sprite.body.velocity.y = data[id].velocity.y;
+
+            if (data[id].facing === 'left') {
+                players[id].faceLeft();
+            } else if (data[id].facing === 'right') {
+                players[id].faceRight();
             }
-        });
+
+            if (data[id].moving === 'left') {
+                players[id].moveLeft();
+            } else if (data[id].moving === '') {
+                players[id].stop();
+            } else if (data[id].moving === 'right') {
+                players[id].moveRight();
+            }
+        } else {
+            state.removePlayer(id);
+        }
+    });
+}
+
+function handleCorrectionData(data) {
+    const state = game.state.getCurrentState();
+    const players = state.players;
+
+    Object.keys(data).forEach((id) => {
+        if (players[id]) {
+            const xDiff = players[id].sprite.x - data[id].coordinates.x;
+            const yDiff = players[id].sprite.y - data[id].coordinates.y;
+            const xDiffCritical = Math.abs(xDiff) > 10;
+            const yDiffCritical = Math.abs(yDiff) > 10;
+
+            if (xDiffCritical) {
+                players[id].sprite.x = utils.extrapolateOrdinate(
+                    data[id].coordinates.x,
+                    data[id].velocity.x,
+                    data[id].time
+                );
+            } else {
+                players[id].sprite.x -= xDiff / 5;
+            }
+
+            if (yDiffCritical) {
+                players[id].sprite.y = utils.extrapolateOrdinate(
+                    data[id].coordinates.y,
+                    data[id].velocity.y,
+                    data[id].time
+                );
+            } else {
+                players[id].sprite.y -= yDiff / 5;
+            }
+        }
     });
 }
 
