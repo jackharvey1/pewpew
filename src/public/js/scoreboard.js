@@ -21,13 +21,17 @@ module.exports.addPlayer = function (id) {
 
 module.exports.removePlayer = function (id) {
     const row = document.getElementById(id);
-    row.parentNode.removeChild(row);
+    if (row) {
+        row.parentNode.removeChild(row);
+    }
 };
 
 module.exports.updatePlayerLatency = function (id, latency) {
     const row = document.getElementById(id);
-    const latencyElement = row.getElementsByClassName('Scoreboard-latency')[0];
-    latencyElement.textContent = latency;
+    if (row) {
+        const latencyElement = row.getElementsByClassName('Scoreboard-latency')[0];
+        latencyElement.textContent = latency;
+    }
 };
 
 function generateRow(id) {
