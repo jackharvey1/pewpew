@@ -55,11 +55,14 @@ function beginClientTick() {
 function beginListeningToServer() {
     const state = game.state.getCurrentState();
 
-    socket.on('server:player-connected', state.addPlayer);
+    socket.on('server:player-connected', (playerId) => {
+        state.addPlayer(playerId);
+        scoreboard.addPlayer(playerId);
+    });
 
     socket.on('server:player-disconnected', (playerId) => {
-        scoreboard.removePlayer(playerId);
         state.removePlayer(playerId);
+        scoreboard.removePlayer(playerId);
     });
 
     socket.on('server:tick', handleServerTick);

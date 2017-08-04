@@ -91,14 +91,11 @@ PlayState.prototype.addPlayer = function (playerId, coordinates) {
     }
 
     this.players[playerId] = newPlayer;
-
-    scoreboard.addPlayer(playerId);
 };
 
 PlayState.prototype.removePlayer = function (playerId) {
     this.players[playerId].sprite.destroy();
     delete this.players[playerId];
-    scoreboard.removePlayer(playerId);
 };
 
 PlayState.prototype.createShot = function (x, y, time, direction) {

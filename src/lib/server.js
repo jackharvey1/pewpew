@@ -63,7 +63,7 @@ module.exports.init = function (io) {
 
     setInterval(() => {
         Object.keys(gameState).forEach((id) => {
-            io.to(id).emit('server:correction', _.omit(gameState, id));
+            io.to(id).emit('server:corrections', _.omit(gameState, id));
         });
     }, 50);
 
