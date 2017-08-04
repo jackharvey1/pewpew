@@ -93,8 +93,6 @@ function handleServerTick(data) {
             } else if (data[id].moving === 'right') {
                 players[id].moveRight();
             }
-        } else {
-            state.removePlayer(id);
         }
     });
 }
