@@ -12,7 +12,7 @@ module.exports.init = function (io) {
 
         nextFireTimes[socket.id] = 0;
         socket.emit('server:player-id', socket.id);
-        socket.emit('server:player-list', gameState);
+        socket.emit('server:player-list', _.omit(gameState, socket.id));
 
         socket.broadcast.emit('server:player-connected', socket.id);
 

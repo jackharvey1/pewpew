@@ -83,7 +83,6 @@ PlayState.prototype.update = function () {
 
 PlayState.prototype.addPlayer = function (playerId, coordinates) {
     const newPlayer = new Player(playerId);
-    newPlayer.create();
 
     if (coordinates) {
         newPlayer.sprite.x = coordinates.x;
