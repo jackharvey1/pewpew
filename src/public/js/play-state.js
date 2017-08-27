@@ -29,7 +29,16 @@ PlayState.prototype.preload = function () {
 PlayState.prototype.create = function () {
     this.player = new Player();
     this.players = {};
+    this.game.stage.backgroundColor = 0x4488CC;
 
+    setUpCameraFollow.call(this);
+    client.init();
+    createClouds.call(this);
+    instantiatePhysics.call(this);
+    setUpInputs.call(this);
+};
+
+function setUpCameraFollow() {
     this.game.camera.follow(this.player.sprite);
     this.game.camera.deadzone = new Phaser.Rectangle(
         200,
@@ -37,27 +46,29 @@ PlayState.prototype.create = function () {
         window.innerWidth - 400,
         window.innerHeight - 200
     );
+}
 
-    client.init();
-
-    this.game.stage.backgroundColor = 0x4488CC;
-
+function createClouds() {
     for (let i = 0; i < 10; i++) {
         const x = Math.random() * this.game.world.bounds.width;
         const y = Math.random() * (this.game.world.bounds.height - 600);
         this.game.add.image(x, y, 'cloud');
     }
+}
 
+function instantiatePhysics() {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
     this.game.physics.arcade.gravity.y = config.gravity;
+}
 
-    cursors = game.input.keyboard.createCursorKeys();
-    jumpButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    fireButton = game.input.keyboard.addKey(Phaser.Keyboard.Z);
-    scoreboardButton = game.input.keyboard.addKey(Phaser.Keyboard.Q);
+function setUpInputs() {
+    cursors = this.game.input.keyboard.createCursorKeys();
+    jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
+    scoreboardButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
     scoreboardButton.onDown.add(scoreboard.show, this);
     scoreboardButton.onUp.add(scoreboard.hide, this);
-};
+}
 
 PlayState.prototype.update = function () {
     if (cursors.left.isDown) {
