@@ -68,9 +68,7 @@ PlayState.prototype.update = function () {
         this.player.stop();
     }
 
-    if (!this.player.sprite.body.onFloor()) {
-        this.player.sprite.animations.stop();
-    }
+    this.player.animateWalking();
 
     if (jumpButton.justPressed()) {
         this.player.jump();
