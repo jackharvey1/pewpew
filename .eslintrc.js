@@ -228,6 +228,7 @@ module.exports = {
         "sort-imports": "error",
         "sort-keys": "off",
         "sort-vars": "off",
+        "space-before-function-paren": ["error", "always"],
         "space-before-blocks": "error",
         "space-before-function-paren": "off",
         "space-in-parens": [

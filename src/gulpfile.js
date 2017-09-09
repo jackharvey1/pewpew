@@ -43,12 +43,12 @@ gulp.task('js', function () {
 
 gulp.task('server', ['build'], function () {
     nodemon({ script: 'app.js' })
-        .on('restart', function() {
+        .on('restart', function () {
             console.log('Restarted');
         });
 });
 
-gulp.task('watch', ['build'], function() {
+gulp.task('watch', ['build'], function () {
     gulp.watch('./**/*.js', ['js']);
 });
 
