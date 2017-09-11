@@ -20,8 +20,12 @@ module.exports.player = {
 module.exports.healthBar = {
     padding: 12,
     height: 3,
-    x: -module.exports.player.width / 2,
-    y: (-module.exports.player.height / 2) - this.padding,
+    get x() {
+        return -module.exports.player.width / 2;
+    },
+    get y() {
+        return (-module.exports.player.height / 2) - module.exports.healthBar.padding;
+    },
     width: module.exports.player.width
 };
 

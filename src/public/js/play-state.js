@@ -1,6 +1,6 @@
 const game = require('./game');
 const config = require('../../config');
-const utils = require('./utils');
+const utils = require('../../common/utils');
 const client = require('./client');
 const scoreboard = require('./scoreboard');
 const Player = require('./player');
@@ -107,7 +107,6 @@ PlayState.prototype.removePlayer = function (playerId) {
 };
 
 PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
-    const laser = game.add.graphics(0, 0);
     const playerPoint = {
         centreX: playerX,
         centreY: playerY
@@ -131,6 +130,14 @@ PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
             worldHeight: config.world.height
         }
     );
+
+    this.drawShot(circleX, circleY, edgeX, edgeY);
+
+    client.transmitShot(circleX, circleY, edgeX, edgeY);
+};
+
+PlayState.prototype.drawShot = function (circleX, circleY, edgeX, edgeY) {
+    const laser = game.add.graphics(0, 0);
 
     laser.lineStyle(1, config.shot.colour, 1);
     laser.moveTo(circleX, circleY);

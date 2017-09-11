@@ -1,19 +1,22 @@
 const game = require('./game');
 const config = require('../../config');
-const client = require('./client');
+const utils = require('../../common/utils');
 const Health = require('./health');
 
 const Player = function (playerId) {
     this.create();
 
     this.id = playerId;
+    this.kills = 0;
+    this.deaths = 0;
+    this.latency = 999;
     this.facing = 'left';
     this.moving = '';
     this.hasDoubleJumped = true;
 };
 
 Player.prototype.create = function () {
-    const sprite = game.add.sprite(window.innerWidth - 200, window.innerHeight - config.player.height, 'player');
+    const sprite = game.add.sprite(config.player.startingX, config.player.startingY, 'player');
 
     sprite.animations.add('move', [0, 1], 10, true);
 
@@ -29,6 +32,12 @@ Player.prototype.create = function () {
     sprite.addChild(this.health.bar);
 
     this.sprite = sprite;
+};
+
+Player.prototype.respawn = function () {
+    this.sprite.x = config.player.startingX;
+    this.sprite.y = config.player.startingY;
+    this.health.reset();
 };
 
 Player.prototype.moveLeft = function () {
@@ -87,7 +96,7 @@ Player.prototype.stop = function () {
 };
 
 Player.prototype.fire = function () {
-    const currentUnixTime = +(new Date());
+    const currentUnixTime = utils.timestamp();
     if (currentUnixTime > this.sprite.nextFireTime) {
         game.state.getCurrentState().createShot(
             this.sprite.x,
@@ -97,8 +106,6 @@ Player.prototype.fire = function () {
         );
 
         this.sprite.nextFireTime = currentUnixTime + config.shot.delay;
-
-        client.transmitShot(this.sprite.x, this.sprite.y, this.facing);
     }
 };
 
