@@ -1,17 +1,32 @@
-module.exports = {
-    world: {
-        width: 4096,
-        height: 2160
-    },
-    shot: {
-        diameter: 16,
-        velocity: 1000,
-        delay: 100
-    },
-    player: {
-        width: 32,
-        height: 48,
-        velocity: 500
-    },
-    gravity: 1000
+module.exports.world = {
+    width: 4096,
+    height: 2160
 };
+
+module.exports.shot = {
+    diameter: 16,
+    velocity: 1000,
+    delay: 100
+};
+
+module.exports.player = {
+    width: 32,
+    height: 48,
+    velocity: 500
+};
+
+module.exports.healthBar = {
+    padding: 12,
+    height: 3,
+    get x () {
+        return -module.exports.player.width / 2;
+    },
+    get y () {
+        return (-module.exports.player.height / 2) - this.padding;
+    },
+    get width () {
+        return module.exports.player.width;
+    }
+};
+
+module.exports.gravity = 1000;

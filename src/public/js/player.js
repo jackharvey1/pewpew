@@ -3,6 +3,7 @@
 const game = require('./game');
 const config = require('../../common/config');
 const client = require('./client');
+const Health = require('./health');
 
 const Player = function (playerId) {
     this.create();
@@ -15,15 +16,19 @@ const Player = function (playerId) {
 
 Player.prototype.create = function () {
     const sprite = game.add.sprite(window.innerWidth - 200, window.innerHeight - config.player.height, 'player');
+
     sprite.animations.add('move', [0, 1], 10, true);
 
     game.physics.enable(sprite, Phaser.Physics.ARCADE);
     sprite.body.collideWorldBounds = true;
-    sprite.body.setSize(32, 32, 5, 16);
+    sprite.body.setSize(config.player.width, config.player.height, 0, 0);
 
     sprite.anchor.setTo(0.5, 0.5);
 
     sprite.nextFireTime = 0;
+
+    this.health = new Health();
+    sprite.addChild(this.health.bar);
 
     this.sprite = sprite;
 };
