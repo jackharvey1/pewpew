@@ -91,7 +91,12 @@ Player.prototype.stop = function () {
 Player.prototype.fire = function () {
     const currentUnixTime = +(new Date());
     if (currentUnixTime > this.sprite.nextFireTime) {
-        game.state.getCurrentState().createShot(this.sprite.x, this.sprite.y, currentUnixTime, this.facing);
+        game.state.getCurrentState().createShot(
+            this.sprite.x,
+            this.sprite.y,
+            game.input.mousePointer.worldX,
+            game.input.mousePointer.worldY
+        );
 
         this.sprite.nextFireTime = currentUnixTime + config.shot.delay;
 

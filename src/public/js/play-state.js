@@ -1,8 +1,8 @@
 'use strict';
 
 const game = require('./game');
-const utils = require('./utils');
 const config = require('../../common/config');
+const utils = require('../../common/utils');
 const client = require('./client');
 const scoreboard = require('./scoreboard');
 const Player = require('./player');
@@ -17,6 +17,7 @@ let cursors,
     scoreboardButton;
 
 PlayState.prototype.preload = function () {
+    this.shots = [];
     this.game.stage.disableVisibilityChange = true;
     this.game.world.setBounds(0, 0, config.world.width, config.world.height);
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
@@ -29,7 +30,7 @@ PlayState.prototype.preload = function () {
 PlayState.prototype.create = function () {
     this.player = new Player();
     this.players = {};
-    this.game.stage.backgroundColor = 0x4488CC;
+    this.game.stage.backgroundColor = config.world.colour;
 
     setUpCameraFollow.call(this);
     client.init();
@@ -71,6 +72,8 @@ function setUpInputs() {
 }
 
 PlayState.prototype.update = function () {
+    this.fadeBeams();
+
     if (cursors.left.isDown) {
         this.player.moveLeft();
     } else if (cursors.right.isDown) {
@@ -106,22 +109,43 @@ PlayState.prototype.removePlayer = function (playerId) {
     delete this.players[playerId];
 };
 
-PlayState.prototype.createShot = function (x, y, time, direction) {
-    const bullet = game.add.sprite(0, 0, 'shot');
-    bullet.x = utils.extrapolateOrdinate(x, config.shot.velocity, time);
-    bullet.y = utils.extrapolateOrdinate(y, 0, time);
+PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
+    const beam = game.add.graphics(0, 0);
+    const playerPoint = {
+        Ax: playerX,
+        Ay: playerY
+    };
+    const mousePoint = {
+        Bx: mouseX,
+        By: mouseY
+    };
 
-    game.physics.enable(bullet, Phaser.Physics.ARCADE);
-    bullet.anchor.setTo(0.5, 0.5);
-    bullet.body.setSize(config.shot.diameter, config.shot.diameter);
+    const { edgeX, edgeY } = utils.getIntersectionWithWorldEdge(
+        playerPoint,
+        mousePoint,
+        {
+            worldWidth: config.world.width,
+            worldHeight: config.world.height
+        }
+    );
 
-    bullet.body.allowGravity = false;
+    const { circleX, circleY } = utils.getIntersectionWithCircle(
+        playerPoint,
+        mousePoint,
+        config.player.height
+    );
 
-    if (direction === 'left') {
-        bullet.body.velocity.x = -config.shot.velocity;
-    } else if (direction === 'right') {
-        bullet.body.velocity.x = config.shot.velocity;
-    }
+    beam.lineStyle(1, config.shot.colour, 1);
+    beam.moveTo(circleX, circleY);
+    beam.lineTo(edgeX, edgeY);
+
+    this.shots.push(beam);
+};
+
+PlayState.prototype.fadeBeams = function () {
+    this.shots.forEach((shot) => {
+        shot.alpha /= 2;
+    });
 };
 
 module.exports = PlayState;
