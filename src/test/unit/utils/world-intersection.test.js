@@ -14,12 +14,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 2160
             },
             A: {
-                Ax: 1500,
-                Ay: 800
+                centreX: 1500,
+                centreY: 800
             },
             B: {
-                Bx: 2000,
-                By: 1200
+                pointX: 2000,
+                pointY: 1200
             },
             world
         },
@@ -30,12 +30,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 1219.2
             },
             A: {
-                Ax: 2000,
-                Ay: 800
+                centreX: 2000,
+                centreY: 800
             },
             B: {
-                Bx: 3000,
-                By: 1000
+                pointX: 3000,
+                pointY: 1000
             },
             world
         },
@@ -46,12 +46,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 0
             },
             A: {
-                Ax: 2200,
-                Ay: 1200
+                centreX: 2200,
+                centreY: 1200
             },
             B: {
-                Bx: 1800,
-                By: 800
+                pointX: 1800,
+                pointY: 800
             },
             world
         },
@@ -62,12 +62,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 600
             },
             A: {
-                Ax: 2000,
-                Ay: 1000
+                centreX: 2000,
+                centreY: 1000
             },
             B: {
-                Bx: 1000,
-                By: 800
+                pointX: 1000,
+                pointY: 800
             },
             world
         }
@@ -81,12 +81,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 2160
             },
             A: {
-                Ax: 2000,
-                Ay: 1000
+                centreX: 2000,
+                centreY: 1000
             },
             B: {
-                Bx: 1800,
-                By: 1500
+                pointX: 1800,
+                pointY: 1500
             },
             world
         },
@@ -97,12 +97,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 1008.0000000000001
             },
             A: {
-                Ax: 1800,
-                Ay: 1500
+                centreX: 1800,
+                centreY: 1500
             },
             B: {
-                Bx: 3200,
-                By: 1200
+                pointX: 3200,
+                pointY: 1200
             },
             world
         },
@@ -113,12 +113,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 0
             },
             A: {
-                Ax: 1800,
-                Ay: 1500
+                centreX: 1800,
+                centreY: 1500
             },
             B: {
-                Bx: 2100,
-                By: 500
+                pointX: 2100,
+                pointY: 500
             },
             world
         },
@@ -129,12 +129,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 1400
             },
             A: {
-                Ax: 2000,
-                Ay: 1000
+                centreX: 2000,
+                centreY: 1000
             },
             B: {
-                Bx: 1000,
-                By: 1200
+                pointX: 1000,
+                pointY: 1200
             },
             world
         }
@@ -148,12 +148,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 2160
             },
             A: {
-                Ax: 2000,
-                Ay: 1000
+                centreX: 2000,
+                centreY: 1000
             },
             B: {
-                Bx: 2000,
-                By: 1500
+                pointX: 2000,
+                pointY: 1500
             },
             world
         },
@@ -164,12 +164,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 1000
             },
             A: {
-                Ax: 2000,
-                Ay: 1000
+                centreX: 2000,
+                centreY: 1000
             },
             B: {
-                Bx: 3000,
-                By: 1000
+                pointX: 3000,
+                pointY: 1000
             },
             world
         },
@@ -180,12 +180,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 0
             },
             A: {
-                Ax: 2000,
-                Ay: 1000
+                centreX: 2000,
+                centreY: 1000
             },
             B: {
-                Bx: 2000,
-                By: 500
+                pointX: 2000,
+                pointY: 500
             },
             world
         },
@@ -196,12 +196,12 @@ describe('Finding line intersection with world', function () {
                 edgeY: 1000
             },
             A: {
-                Ax: 2000,
-                Ay: 1000
+                centreX: 2000,
+                centreY: 1000
             },
             B: {
-                Bx: 1000,
-                By: 1000
+                pointX: 1000,
+                pointY: 1000
             },
             world
         }
@@ -214,12 +214,12 @@ describe('Finding line intersection with world', function () {
             edgeY: 0
         },
         A: {
-            Ax: 2000,
-            Ay: 1000
+            centreX: 2000,
+            centreY: 1000
         },
         B: {
-            Bx: 1000,
-            By: 500
+            pointX: 1000,
+            pointY: 500
         },
         world: {
             worldWidth: 4096,
@@ -232,12 +232,12 @@ describe('Finding line intersection with world', function () {
             edgeY: 0
         },
         A: {
-            Ax: 2000,
-            Ay: 1000
+            centreX: 2000,
+            centreY: 1000
         },
         B: {
-            Bx: 3048,
-            By: 500
+            pointX: 3048,
+            pointY: 500
         },
         world: {
             worldWidth: 4096,
@@ -250,12 +250,12 @@ describe('Finding line intersection with world', function () {
             edgeY: 2160
         },
         A: {
-            Ax: 2000,
-            Ay: 1000
+            centreX: 2000,
+            centreY: 1000
         },
         B: {
-            Bx: 1000,
-            By: 1580
+            pointX: 1000,
+            pointY: 1580
         },
         world: {
             worldWidth: 4096,
@@ -268,12 +268,12 @@ describe('Finding line intersection with world', function () {
             edgeY: 2160
         },
         A: {
-            Ax: 2000,
-            Ay: 1000
+            centreX: 2000,
+            centreY: 1000
         },
         B: {
-            Bx: 3048,
-            By: 1580
+            pointX: 3048,
+            pointY: 1580
         },
         world: {
             worldWidth: 4096,

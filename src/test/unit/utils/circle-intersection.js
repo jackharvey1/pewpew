@@ -20,8 +20,8 @@ describe('Finding intersection between circle center and external point', functi
         }, {
             case: 'Intersection through the top right',
             expected: {
-                circleX: 0,
-                circleY: 0
+                circleX: 11.246950475544242,
+                circleY: 12.808688094430302
             },
             A: {
                 centreX: 5,
@@ -50,8 +50,8 @@ describe('Finding intersection between circle center and external point', functi
         }, {
             case: 'Intersection through bottom right',
             expected: {
-                circleX: 0,
-                circleY: 0
+                circleX: 8.94427190999916,
+                circleY: -14.47213595499958
             },
             A: {
                 centreX: 0,
@@ -80,8 +80,8 @@ describe('Finding intersection between circle center and external point', functi
         }, {
             case: 'Intersection through the bottom left',
             expected: {
-                circleX: 0,
-                circleY: 0
+                circleX: -4.4721359549995805,
+                circleY: -8.94427190999916
             },
             A: {
                 centreX: 0,
@@ -110,8 +110,8 @@ describe('Finding intersection between circle center and external point', functi
         }, {
             case: 'Intersection through the top left',
             expected: {
-                circleX: -0,
-                circleY: 0
+                circleX: -12.071067811865476,
+                circleY: 17.071067811865476
             },
             A: {
                 centreX: -5,

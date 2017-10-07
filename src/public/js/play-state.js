@@ -112,16 +112,22 @@ PlayState.prototype.removePlayer = function (playerId) {
 PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
     const beam = game.add.graphics(0, 0);
     const playerPoint = {
-        Ax: playerX,
-        Ay: playerY
+        centreX: playerX,
+        centreY: playerY
     };
     const mousePoint = {
-        Bx: mouseX,
-        By: mouseY
+        pointX: mouseX,
+        pointY: mouseY
     };
 
-    const { edgeX, edgeY } = utils.getIntersectionWithWorldEdge(
+    const { circleX, circleY } = utils.getIntersectionWithCircle(
         playerPoint,
+        mousePoint,
+        config.player.height
+    );
+
+    const { edgeX, edgeY } = utils.getIntersectionWithWorldEdge(
+        { centreX: circleX, centreY: circleY },
         mousePoint,
         {
             worldWidth: config.world.width,
@@ -129,11 +135,8 @@ PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
         }
     );
 
-    const { circleX, circleY } = utils.getIntersectionWithCircle(
-        playerPoint,
-        mousePoint,
-        config.player.height
-    );
+
+    console.log(circleX, circleY);
 
     beam.lineStyle(1, config.shot.colour, 1);
     beam.moveTo(circleX, circleY);

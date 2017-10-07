@@ -1,26 +1,26 @@
 'use strict';
 
-module.exports.getIntersectionWithWorldEdge = function ({ Ax, Ay }, { Bx, By }, { worldWidth, worldHeight }) {
-    const isMovingRight = (Bx - Ax) > 0;
-    const isMovingUp = (By - Ay) > 0;
+module.exports.getIntersectionWithWorldEdge = function ({ centreX, centreY }, { pointX, pointY }, { worldWidth, worldHeight }) {
+    const isMovingRight = (pointX - centreX) > 0;
+    const isMovingUp = (pointY - centreY) > 0;
     let edgeX, edgeY;
 
-    if (Ax === Bx) {
+    if (centreX === pointX) {
         return {
-            edgeX: Ax,
+            edgeX: centreX,
             edgeY: isMovingUp ? worldHeight : 0
         };
     }
 
-    if (Ay === By) {
+    if (centreY === pointY) {
         return {
             edgeX: isMovingRight ? worldWidth : 0,
-            edgeY: By
+            edgeY: pointY
         };
     }
 
-    const gradient = getGradient(Ax, Ay, Bx, By);
-    const c = getC(Ax, Ay, gradient);
+    const gradient = getGradient(centreX, centreY, pointX, pointY);
+    const c = getC(centreX, centreY, gradient);
     const xAtBottom = solveForX(gradient, 0, c);
     const xAtTop = solveForX(gradient, worldHeight, c);
     const yAtLeft = solveForY(gradient, 0, c);
@@ -50,40 +50,76 @@ module.exports.getIntersectionWithWorldEdge = function ({ Ax, Ay }, { Bx, By }, 
 };
 
 module.exports.getIntersectionWithCircle = function ({ centreX, centreY }, { pointX, pointY }, radius) {
-    const theta = getAngleOfC({
-        Ax: centreX,
-        Ay: centreY
+    let circleX, circleY;
+
+    if (centreX === pointX) {
+        circleX = centreX;
+        if (centreY < pointY) {
+            circleY = centreY + radius;
+        } else {
+            circleY = centreY - radius;
+        }
+        return { circleX, circleY };
+    } else if (centreY === pointY) {
+        circleY = centreY;
+        if (centreX < pointX) {
+            circleX = centreX + radius;
+        } else {
+            circleX = centreX - radius;
+        }
+        return { circleX, circleY };
+    }
+
+    let gamma = getAngleOfC({
+        centreX: centreX,
+        centreY: centreY
     }, {
-        Bx: pointX,
-        By: pointY
+        pointX: pointX,
+        pointY: pointY
     }, {
         Cx: centreX + radius,
         Cy: centreY
     });
-    const x = radius * Math.cos(theta);
-    const y = radius * Math.sin(theta);
-    // console.log('intersection:', theta, x, y);
 
-    return { circleX: x, circleY: y };
+    if (gamma > Math.PI / 2) {
+        gamma -= Math.PI / 2;
+    }
+
+    const xMagnitude = radius * Math.cos(gamma);
+    const yMagnitude = radius * Math.sin(gamma);
+
+    if (pointX > centreX) {
+        circleX = centreX + xMagnitude;
+    } else {
+        circleX = centreX - xMagnitude;
+    }
+
+    if (pointY > centreY) {
+        circleY = centreY + yMagnitude;
+    } else {
+        circleY = centreY - yMagnitude;
+    }
+
+    return { circleX, circleY };
 };
 
-function getAngleOfC({ Ax, Ay }, { Bx, By }, { Cx, Cy }) {
+function getAngleOfC({ centreX, centreY }, { pointX, pointY }, { Cx, Cy }) {
     // Law of cosines, return angle BAC
-    const a = getLengthOfLine(Bx, By, Cx, Cy);
-    const b = getLengthOfLine(Ax, Ay, Cx, Cy);
-    const c = getLengthOfLine(Ax, Ay, Bx, By);
-    // console.log('angle of c:', a, b, c);
-    const numerator = (c ** 2) - (a ** 2) - (b ** 2);
+    const a = getLengthOfLine(centreX, centreY, Cx, Cy);
+    const b = getLengthOfLine(centreX, centreY, pointX, pointY);
+    const c = getLengthOfLine(pointX, pointY, Cx, Cy);
+    const numerator = (a ** 2) + (b ** 2) - (c ** 2);
     const denominator = 2 * a * b;
     return Math.acos(numerator / denominator);
 }
 
+// function radiansToDegrees(radians) {
+//     return radians * (180 / Math.PI);
+// }
+
 function getLengthOfLine(Ax, Ay, Bx, By) {
-    // console.log(Ax - Bx);
-    // console.log((Ax - Bx) ** 2);
     const xLength = (Ax - Bx) ** 2;
     const yLength = (Ay - By) ** 2;
-    // console.log('length:', xLength, yLength, Math.sqrt(xLength + yLength));
     return Math.sqrt(xLength + yLength);
 }
 
