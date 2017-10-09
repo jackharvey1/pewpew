@@ -144,8 +144,10 @@ PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
 
 PlayState.prototype.fadeBeams = function () {
     this.shots.forEach((shot) => {
-        shot.alpha /= 2;
+        shot.alpha -= 0.1;
     });
+
+    this.shots = this.shots.filter(shot => shot.alpha > 0);
 };
 
 module.exports = PlayState;
