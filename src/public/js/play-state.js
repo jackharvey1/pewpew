@@ -135,9 +135,6 @@ PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
         }
     );
 
-
-    console.log(circleX, circleY);
-
     beam.lineStyle(1, config.shot.colour, 1);
     beam.moveTo(circleX, circleY);
     beam.lineTo(edgeX, edgeY);

@@ -52,34 +52,20 @@ module.exports.getIntersectionWithWorldEdge = function ({ centreX, centreY }, { 
 module.exports.getIntersectionWithCircle = function ({ centreX, centreY }, { pointX, pointY }, radius) {
     let circleX, circleY;
 
-    if (centreX === pointX) {
-        circleX = centreX;
-        if (centreY < pointY) {
-            circleY = centreY + radius;
-        } else {
-            circleY = centreY - radius;
-        }
-        return { circleX, circleY };
-    } else if (centreY === pointY) {
-        circleY = centreY;
-        if (centreX < pointX) {
-            circleX = centreX + radius;
-        } else {
-            circleX = centreX - radius;
-        }
-        return { circleX, circleY };
-    }
+    const inventedLine = {
+        Cx: centreX + (pointX > centreX ? radius : -radius),
+        Cy: centreY
+    };
 
     let gamma = getAngleOfC({
-        centreX: centreX,
-        centreY: centreY
+        centreX,
+        centreY
     }, {
-        pointX: pointX,
-        pointY: pointY
-    }, {
-        Cx: centreX + radius,
-        Cy: centreY
-    });
+        pointX,
+        pointY
+    },
+    inventedLine
+    );
 
     if (gamma > Math.PI / 2) {
         gamma -= Math.PI / 2;
