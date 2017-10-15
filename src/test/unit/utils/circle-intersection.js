@@ -1,4 +1,4 @@
-const getIntersectionWithCircle = require('../../../common/utils').getIntersectionWithCircle;
+const getIntersectionWithCircle = require('../../../public/js/utils').getIntersectionWithCircle;
 
 describe('Finding intersection between circle center and external point', function () {
     const scenarios = [

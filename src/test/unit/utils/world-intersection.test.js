@@ -1,4 +1,4 @@
-const getIntersectionWithWorldEdge = require('../../../common/utils').getIntersectionWithWorldEdge;
+const getIntersectionWithWorldEdge = require('../../../public/js/utils').getIntersectionWithWorldEdge;
 
 describe('Finding line intersection with world', function () {
     const world = {

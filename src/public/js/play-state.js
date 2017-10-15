@@ -2,7 +2,7 @@
 
 const game = require('./game');
 const config = require('../../common/config');
-const utils = require('../../common/utils');
+const utils = require('./utils');
 const client = require('./client');
 const scoreboard = require('./scoreboard');
 const Player = require('./player');
