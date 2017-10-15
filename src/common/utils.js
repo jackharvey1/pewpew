@@ -1,6 +1,10 @@
 'use strict';
 
-module.exports.getIntersectionWithWorldEdge = function ({ centreX, centreY }, { pointX, pointY }, { worldWidth, worldHeight }) {
+module.exports.getIntersectionWithWorldEdge = function (
+    { centreX, centreY },
+    { pointX, pointY },
+    { worldWidth, worldHeight }
+) {
     const isMovingRight = (pointX - centreX) > 0;
     const isMovingUp = (pointY - centreY) > 0;
     let edgeX, edgeY;
@@ -42,7 +46,11 @@ module.exports.getIntersectionWithWorldEdge = function ({ centreX, centreY }, { 
     return { edgeX, edgeY };
 };
 
-module.exports.getIntersectionWithCircle = function ({ centreX, centreY }, { pointX, pointY }, radius) {
+module.exports.getIntersectionWithCircle = function (
+    { centreX, centreY },
+    { pointX, pointY },
+    radius
+) {
     const inventedLine = {
         Cx: centreX + (pointX > centreX ? radius : -radius),
         Cy: centreY
