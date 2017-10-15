@@ -6,7 +6,6 @@ module.exports.world = {
 
 module.exports.shot = {
     delay: 200,
-    fadeTime: 100,
     colour: 0xFFFFFF
 };
 

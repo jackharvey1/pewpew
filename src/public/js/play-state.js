@@ -110,7 +110,7 @@ PlayState.prototype.removePlayer = function (playerId) {
 };
 
 PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
-    const beam = game.add.graphics(0, 0);
+    const laser = game.add.graphics(0, 0);
     const playerPoint = {
         centreX: playerX,
         centreY: playerY
@@ -135,11 +135,11 @@ PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
         }
     );
 
-    beam.lineStyle(1, config.shot.colour, 1);
-    beam.moveTo(circleX, circleY);
-    beam.lineTo(edgeX, edgeY);
+    laser.lineStyle(1, config.shot.colour, 1);
+    laser.moveTo(circleX, circleY);
+    laser.lineTo(edgeX, edgeY);
 
-    this.shots.push(beam);
+    this.shots.push(laser);
 };
 
 PlayState.prototype.fadeBeams = function () {

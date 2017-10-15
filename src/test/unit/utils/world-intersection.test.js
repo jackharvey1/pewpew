@@ -22,8 +22,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 1200
             },
             world
-        },
-        {
+        }, {
             case: 'Positive line gradient that intersects at the right',
             expected: {
                 edgeX: 4096,
@@ -38,8 +37,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 1000
             },
             world
-        },
-        {
+        }, {
             case: 'Positive line gradient that intersects at the bottom',
             expected: {
                 edgeX: 1000,
@@ -54,8 +52,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 800
             },
             world
-        },
-        {
+        }, {
             case: 'Positive line gradient that intersects at the left',
             expected: {
                 edgeX: 0,
@@ -89,8 +86,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 1500
             },
             world
-        },
-        {
+        }, {
             case: 'Negative line gradient that intersects at the right',
             expected: {
                 edgeX: 4096,
@@ -105,8 +101,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 1200
             },
             world
-        },
-        {
+        }, {
             case: 'Negative line gradient that intersects at the bottom',
             expected: {
                 edgeX: 2250,
@@ -121,8 +116,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 500
             },
             world
-        },
-        {
+        }, {
             case: 'Negative line gradient that intersects at the left',
             expected: {
                 edgeX: 0,
@@ -156,8 +150,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 1500
             },
             world
-        },
-        {
+        }, {
             case: 'Flat horizontal line gradient that intersects at the right',
             expected: {
                 edgeX: 4096,
@@ -172,8 +165,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 1000
             },
             world
-        },
-        {
+        }, {
             case: 'Flat vertical line gradient that intersects at the bottom',
             expected: {
                 edgeX: 2000,
@@ -188,8 +180,7 @@ describe('Finding line intersection with world', function () {
                 pointY: 500
             },
             world
-        },
-        {
+        }, {
             case: 'Flat horizontal line gradient that intersects at the left',
             expected: {
                 edgeX: 0,
@@ -281,7 +272,8 @@ describe('Finding line intersection with world', function () {
         }
     }];
 
-    const allScenarios = [].concat(flatGradients,
+    const allScenarios = [].concat(
+        flatGradients,
         positiveGradients,
         negativeGradients,
         cornerHits
