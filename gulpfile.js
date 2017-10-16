@@ -1,29 +1,21 @@
 const gulp = require('gulp');
 const browserify = require('browserify');
-const eslint = require('gulp-eslint');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
-const uglify = require('gulp-uglify');
+const uglify = require('gulp-uglify-es').default;
 const sourcemaps = require('gulp-sourcemaps');
 const livereload = require('gulp-livereload');
 const nodemon = require('gulp-nodemon');
 
-gulp.task('build', ['lint', 'js']);
-
-gulp.task('lint', () => {
-    return gulp.src(['**/*.js', '!**/*.min.js', '!node_modules/**'])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
-});
+gulp.task('build', ['js']);
 
 gulp.task('js', function () {
     return browserify({
         entries: [
-            './public/js/game.js',
-            './public/js/client.js',
-            './public/js/play-state.js',
-            './public/js/player.js'
+            './src/public/js/game.js',
+            './src/public/js/client.js',
+            './src/public/js/play-state.js',
+            './src/public/js/player.js'
         ],
         debug: true
     })
@@ -35,9 +27,10 @@ gulp.task('js', function () {
         .pipe(uglify({ mangle: false }))
         .on('error', function (err) {
             console.error(err.message);
+            this.emit('end');
         })
         .pipe(sourcemaps.write('../maps'))
-        .pipe(gulp.dest('./public/js/'))
+        .pipe(gulp.dest('./src/public/js/'))
         .pipe(livereload());
 });
 
