@@ -5,7 +5,7 @@ describe('Finding intersection on circle circumference between circle center and
         {
             case: 'Intersection through the top',
             expected: {
-                circleX: 4.999999999999999,
+                circleX: 5,
                 circleY: 15
             },
             A: {
@@ -21,7 +21,7 @@ describe('Finding intersection on circle circumference between circle center and
             case: 'Intersection through the top right',
             expected: {
                 circleX: 11.246950475544242,
-                circleY: 12.808688094430302
+                circleY: 12.808688094430304
             },
             A: {
                 centreX: 5,
@@ -65,7 +65,7 @@ describe('Finding intersection on circle circumference between circle center and
         }, {
             case: 'Intersection through bottom',
             expected: {
-                circleX: -6.123233995736766e-16,
+                circleX: 0,
                 circleY: -20
             },
             A: {

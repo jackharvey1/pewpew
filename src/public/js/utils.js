@@ -57,42 +57,12 @@ module.exports.getIntersectionWithCircle = function (
     { pointX, pointY },
     radius
 ) {
-    const inventedLine = {
-        Cx: centreX + (pointX > centreX ? radius : -radius),
-        Cy: centreY
+    const coefficient = radius / getLengthOfLine(centreX, centreY, pointX, pointY);
+    return {
+        circleX: (coefficient * (pointX - centreX)) + centreX,
+        circleY: (coefficient * (pointY - centreY)) + centreY
     };
-
-    let gamma = getAngleOfC({
-        centreX,
-        centreY
-    }, {
-        pointX,
-        pointY
-    },
-    inventedLine
-    );
-
-    if (gamma > Math.PI / 2) {
-        gamma -= Math.PI / 2;
-    }
-
-    const xMagnitude = radius * Math.cos(gamma);
-    const yMagnitude = radius * Math.sin(gamma);
-
-    const circleX = centreX += pointX > centreX ? xMagnitude : -xMagnitude;
-    const circleY = centreY += pointY > centreY ? yMagnitude : -yMagnitude;
-
-    return { circleX, circleY };
 };
-
-function getAngleOfC({ centreX, centreY }, { pointX, pointY }, { Cx, Cy }) {
-    const a = getLengthOfLine(centreX, centreY, Cx, Cy);
-    const b = getLengthOfLine(centreX, centreY, pointX, pointY);
-    const c = getLengthOfLine(pointX, pointY, Cx, Cy);
-    const numerator = (a ** 2) + (b ** 2) - (c ** 2);
-    const denominator = 2 * a * b;
-    return Math.acos(numerator / denominator);
-}
 
 function getLengthOfLine(Ax, Ay, Bx, By) {
     const xLength = (Ax - Bx) ** 2;
