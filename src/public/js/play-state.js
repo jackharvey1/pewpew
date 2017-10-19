@@ -1,14 +1,14 @@
 'use strict';
 
 const game = require('./game');
-const utils = require('./utils');
 const config = require('../../common/config');
+const utils = require('./utils');
 const client = require('./client');
 const scoreboard = require('./scoreboard');
 const Player = require('./player');
 
 const PlayState = function () {
-    return this;
+    this.shots = [];
 };
 
 let cursors,
@@ -29,7 +29,7 @@ PlayState.prototype.preload = function () {
 PlayState.prototype.create = function () {
     this.player = new Player();
     this.players = {};
-    this.game.stage.backgroundColor = 0x4488CC;
+    this.game.stage.backgroundColor = config.world.colour;
 
     setUpCameraFollow.call(this);
     client.init();
@@ -71,6 +71,8 @@ function setUpInputs() {
 }
 
 PlayState.prototype.update = function () {
+    this.fadeBeams();
+
     if (cursors.left.isDown) {
         this.player.moveLeft();
     } else if (cursors.right.isDown) {
@@ -106,22 +108,45 @@ PlayState.prototype.removePlayer = function (playerId) {
     delete this.players[playerId];
 };
 
-PlayState.prototype.createShot = function (x, y, time, direction) {
-    const bullet = game.add.sprite(0, 0, 'shot');
-    bullet.x = utils.extrapolateOrdinate(x, config.shot.velocity, time);
-    bullet.y = utils.extrapolateOrdinate(y, 0, time);
+PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
+    const laser = game.add.graphics(0, 0);
+    const playerPoint = {
+        centreX: playerX,
+        centreY: playerY
+    };
+    const mousePoint = {
+        pointX: mouseX,
+        pointY: mouseY
+    };
 
-    game.physics.enable(bullet, Phaser.Physics.ARCADE);
-    bullet.anchor.setTo(0.5, 0.5);
-    bullet.body.setSize(config.shot.diameter, config.shot.diameter);
+    const { circleX, circleY } = utils.getIntersectionWithCircle(
+        playerPoint,
+        mousePoint,
+        config.player.height
+    );
 
-    bullet.body.allowGravity = false;
+    const { edgeX, edgeY } = utils.getIntersectionWithWorldEdge(
+        { centreX: circleX, centreY: circleY },
+        mousePoint,
+        {
+            worldWidth: config.world.width,
+            worldHeight: config.world.height
+        }
+    );
 
-    if (direction === 'left') {
-        bullet.body.velocity.x = -config.shot.velocity;
-    } else if (direction === 'right') {
-        bullet.body.velocity.x = config.shot.velocity;
-    }
+    laser.lineStyle(1, config.shot.colour, 1);
+    laser.moveTo(circleX, circleY);
+    laser.lineTo(edgeX, edgeY);
+
+    this.shots.push(laser);
+};
+
+PlayState.prototype.fadeBeams = function () {
+    this.shots.forEach((shot) => {
+        shot.alpha -= 0.1;
+    });
+
+    this.shots = this.shots.filter(shot => shot.alpha > 0);
 };
 
 module.exports = PlayState;

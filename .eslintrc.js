@@ -11,6 +11,7 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "parserOptions": {
+        "ecmaVersion": 2016,
         "sourceType": "module"
     },
     "rules": {
@@ -138,7 +139,7 @@ module.exports = {
         "no-label-var": "error",
         "no-labels": "error",
         "no-lone-blocks": "error",
-        "no-lonely-if": "error",
+        "no-lonely-if": "off",
         "no-loop-func": "error",
         "no-magic-numbers": "off",
         "no-mixed-operators": "error",

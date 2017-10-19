@@ -1,12 +1,12 @@
 module.exports.world = {
     width: 4096,
-    height: 2160
+    height: 2160,
+    colour: 0x4488CC
 };
 
 module.exports.shot = {
-    diameter: 16,
-    velocity: 1000,
-    delay: 100
+    delay: 200,
+    colour: 0xFFFFFF
 };
 
 module.exports.player = {
