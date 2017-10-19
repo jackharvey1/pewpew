@@ -8,7 +8,7 @@ const scoreboard = require('./scoreboard');
 const Player = require('./player');
 
 const PlayState = function () {
-    return this;
+    this.shots = [];
 };
 
 let cursors,
@@ -17,7 +17,6 @@ let cursors,
     scoreboardButton;
 
 PlayState.prototype.preload = function () {
-    this.shots = [];
     this.game.stage.disableVisibilityChange = true;
     this.game.world.setBounds(0, 0, config.world.width, config.world.height);
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
