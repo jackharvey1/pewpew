@@ -35,14 +35,14 @@ gulp.task('js', function () {
 });
 
 gulp.task('server', ['build'], function () {
-    nodemon({ script: 'app.js' })
+    nodemon({ script: './src/app.js' })
         .on('restart', function () {
             console.log('Restarted');
         });
 });
 
 gulp.task('watch', ['build'], function () {
-    gulp.watch('./**/*.js', ['js']);
+    gulp.watch('./src/**/*.js', ['js']);
 });
 
 gulp.task('default', ['server', 'watch']);
