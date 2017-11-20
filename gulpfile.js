@@ -42,7 +42,10 @@ gulp.task('server', ['build'], function () {
 });
 
 gulp.task('watch', ['build'], function () {
-    gulp.watch('./src/**/*.js', ['js']);
+    gulp.watch([
+        './src/**/*.js',
+        '!./src/public/js/main.min.js'
+    ], ['js']);
 });
 
 gulp.task('default', ['server', 'watch']);
