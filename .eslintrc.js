@@ -177,7 +177,7 @@ module.exports = {
         "no-shadow": "off",
         "no-shadow-restricted-names": "error",
         "no-spaced-func": "error",
-        "no-sync": "error",
+        "no-sync": "off",
         "no-tabs": "error",
         "no-template-curly-in-string": "error",
         "no-ternary": "off",
@@ -256,7 +256,7 @@ module.exports = {
         "valid-jsdoc": "error",
         "vars-on-top": "error",
         "wrap-iife": ["error", "inside"],
-        "wrap-regex": "error",
+        "wrap-regex": "off",
         "yield-star-spacing": "error",
         "yoda": [
             "error",
