@@ -3,7 +3,7 @@
 const game = require('./game');
 const config = require('../../common/config');
 
-function Health () {
+function Health() {
     this.points = 100;
 
     this.bar = game.make.graphics();

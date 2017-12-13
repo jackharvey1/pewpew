@@ -6,8 +6,29 @@
   "scripts": {
     "build": "gulp build",
     "test": "npm run lint && npm run mocha",
-    "mocha": "mocha src/test/ --recursive --timeout 3000 || true",
-    "lint": "eslint ."
+    "mocha": "nyc mocha src/test/ --recursive --timeout 3000 || true",
+    "lint": "eslint .",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "nyc": {
+    "lines": 0,
+    "all": true,
+    "source-map": false,
+    "check-coverage": true,
+    "per-file": true,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "src/**/*.test.js",
+      "src/**/phaser.min.js",
+      "node_modules/**/*.js"
+    ],
+    "reporter": [
+      "text"
+    ],
+    "cache": true,
+    "all": true
   },
   "author": "",
   "license": "ISC",
@@ -28,9 +49,11 @@
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
     "chai": "^4.1.1",
+    "coveralls": "^3.0.0",
     "eslint": "^4.8.0",
     "gulp-uglify-es": "^0.1.3",
     "mocha": "^3.5.0",
+    "nyc": "^11.3.0",
     "proxyquire": "^1.8.0",
     "sinon": "^3.2.1"
   }

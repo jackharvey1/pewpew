@@ -18,13 +18,13 @@ module.exports.player = {
 module.exports.healthBar = {
     padding: 12,
     height: 3,
-    get x () {
+    get x() {
         return -module.exports.player.width / 2;
     },
-    get y () {
+    get y() {
         return (-module.exports.player.height / 2) - this.padding;
     },
-    get width () {
+    get width() {
         return module.exports.player.width;
     }
 };
