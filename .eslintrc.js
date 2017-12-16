@@ -145,7 +145,10 @@ module.exports = {
         "no-mixed-requires": "error",
         "no-multi-spaces": "error",
         "no-multi-str": "error",
-        "no-multiple-empty-lines": "error",
+        "no-multiple-empty-lines": [
+            "error",
+            { "max": 2 }
+        ],
         "no-native-reassign": "error",
         "no-negated-condition": "warn",
         "no-negated-in-lhs": "error",
