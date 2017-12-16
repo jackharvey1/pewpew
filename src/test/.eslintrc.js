@@ -1,14 +1,15 @@
 module.exports = {
+    env: {
+        "mocha": true
+    },
     globals: {
         chai: true,
         sinon: true,
         sandbox: true,
         expect: true
     },
-    parserOptions: {
-        ecmaVersion: 2016
-    },
     rules: {
-        'no-unused-expressions': 'off'
+        'no-unused-expressions': 'off',
+        'no-empty-function': 'off'
     }
 }

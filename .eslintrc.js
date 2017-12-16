@@ -2,7 +2,6 @@ module.exports = {
     "env": {
         "browser": true,
         "node": true,
-        "mocha": true,
         "es6": true
     },
     "globals": {
@@ -11,7 +10,7 @@ module.exports = {
     },
     "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 2016,
+        "ecmaVersion": 8,
         "sourceType": "module"
     },
     "rules": {
