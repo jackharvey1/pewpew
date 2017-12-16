@@ -25,7 +25,9 @@
       "node_modules/**/*.js"
     ],
     "reporter": [
-      "text"
+      "text",
+      "text-summary",
+      "lcov"
     ],
     "cache": true,
     "all": true
@@ -43,6 +45,7 @@
     "lodash": "^4.17.4",
     "morgan": "^1.8.2",
     "socket.io": "^2.0.1",
+    "uuid": "^3.1.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
