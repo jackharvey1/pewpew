@@ -5,8 +5,7 @@ module.exports = {
         "es6": true
     },
     "globals": {
-        "Phaser": true,
-        "io": true
+        "Phaser": true
     },
     "extends": "eslint:recommended",
     "parserOptions": {
