@@ -18,8 +18,8 @@ module.exports = {
         "array-callback-return": "error",
         "arrow-body-style": "off",
         "arrow-parens": [
-            "off",
-            "always"
+            "error",
+            "as-needed"
         ],
         "arrow-spacing": [
             "error",
@@ -107,7 +107,7 @@ module.exports = {
         "new-parens": "error",
         "newline-after-var": "off",
         "newline-before-return": "off",
-        "newline-per-chained-call": "off",
+        "newline-per-chained-call": ["error", { "ignoreChainWithDepth": 2 }],
         "no-alert": "error",
         "no-array-constructor": "error",
         "no-await-in-loop": "off",

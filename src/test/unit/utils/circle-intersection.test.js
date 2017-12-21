@@ -125,7 +125,7 @@ describe('Finding intersection on circle circumference between circle center and
         }
     ];
 
-    scenarios.forEach((s) => {
+    scenarios.forEach(s => {
         it(s.case, function () {
             expect(getIntersectionWithCircle(
                 s.A,

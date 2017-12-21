@@ -9,14 +9,14 @@ module.exports.init = function () {
     socket = io.connect(window.location.host);
     const state = game.state.getCurrentState();
 
-    socket.on('server:player-list', (gameState) => {
-        Object.keys(gameState).forEach((playerId) => {
+    socket.on('server:player-list', gameState => {
+        Object.keys(gameState).forEach(playerId => {
             state.addPlayer(playerId, gameState[playerId].coordinates);
             scoreboard.addPlayer(playerId);
         });
     });
 
-    socket.on('server:player-id', (playerId) => {
+    socket.on('server:player-id', playerId => {
         state.player.id = playerId;
         scoreboard.addPlayer(playerId);
         beginClientTick();
@@ -27,7 +27,7 @@ module.exports.init = function () {
         scoreboard.updatePlayerLatency(id, latency);
     });
 
-    socket.on('ding', (timeSent) => {
+    socket.on('ding', timeSent => {
         const currentUnixTime = +(new Date());
         socket.emit('dong', currentUnixTime - timeSent);
     });
@@ -56,19 +56,19 @@ function beginClientTick() {
 function beginListeningToServer() {
     const state = game.state.getCurrentState();
 
-    socket.on('server:player-connected', (playerId) => {
+    socket.on('server:player-connected', playerId => {
         state.addPlayer(playerId);
         scoreboard.addPlayer(playerId);
     });
 
-    socket.on('server:player-disconnected', (playerId) => {
+    socket.on('server:player-disconnected', playerId => {
         state.removePlayer(playerId);
         scoreboard.removePlayer(playerId);
     });
 
     socket.on('server:tick', handleServerTick);
 
-    socket.on('server:shot', (data) => {
+    socket.on('server:shot', data => {
         state.createShot(data.x, data.y, data.time, data.direction);
     });
 
@@ -79,7 +79,7 @@ function handleServerTick(data) {
     const state = game.state.getCurrentState();
     const players = state.players;
 
-    Object.keys(data).forEach((id) => {
+    Object.keys(data).forEach(id => {
         if (players[id]) {
             players[id].sprite.body.velocity.x = data[id].velocity.x;
             players[id].sprite.body.velocity.y = data[id].velocity.y;
@@ -105,7 +105,7 @@ function handleCorrectionData(data) {
     const state = game.state.getCurrentState();
     const players = state.players;
 
-    Object.keys(data).forEach((id) => {
+    Object.keys(data).forEach(id => {
         if (players[id]) {
             const xDiff = players[id].sprite.x - data[id].coordinates.x;
             const yDiff = players[id].sprite.y - data[id].coordinates.y;

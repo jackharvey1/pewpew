@@ -7,7 +7,7 @@ const gameState = {};
 const nextFireTimes = {};
 
 module.exports.init = function (io) {
-    io.on('connection', (socket) => {
+    io.on('connection', socket => {
         logger.log(`${socket.id} connected`);
 
         nextFireTimes[socket.id] = 0;
@@ -22,7 +22,7 @@ module.exports.init = function (io) {
             delete gameState[socket.id];
         });
 
-        socket.on('client:tick', (data) => {
+        socket.on('client:tick', data => {
             const currentUnixTime = +(new Date());
             gameState[socket.id] = {
                 time: currentUnixTime,
@@ -33,7 +33,7 @@ module.exports.init = function (io) {
             };
         });
 
-        socket.on('client:shot', (data) => {
+        socket.on('client:shot', data => {
             const currentUnixTime = +(new Date());
             if (nextFireTimes[socket.id] < currentUnixTime) {
                 socket.broadcast.emit('server:shot', {
@@ -47,7 +47,7 @@ module.exports.init = function (io) {
             }
         });
 
-        socket.on('dong', (latency) => {
+        socket.on('dong', latency => {
             io.sockets.emit('server:player-latency', {
                 id: socket.id,
                 latency: latency
@@ -56,13 +56,13 @@ module.exports.init = function (io) {
     });
 
     setInterval(() => {
-        Object.keys(gameState).forEach((id) => {
+        Object.keys(gameState).forEach(id => {
             io.to(id).emit('server:tick', _.omit(gameState, id));
         });
     }, 10);
 
     setInterval(() => {
-        Object.keys(gameState).forEach((id) => {
+        Object.keys(gameState).forEach(id => {
             io.to(id).emit('server:corrections', _.omit(gameState, id));
         });
     }, 50);
