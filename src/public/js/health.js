@@ -1,7 +1,7 @@
 'use strict';
 
 const game = require('./game');
-const config = require('../../common/config');
+const config = require('../../config');
 
 function Health() {
     this.points = 100;

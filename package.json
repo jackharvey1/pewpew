@@ -6,7 +6,7 @@
   "scripts": {
     "build": "gulp build",
     "test": "npm run lint && npm run mocha",
-    "mocha": "nyc mocha src/test/ --recursive --timeout 3000 || true",
+    "mocha": "NODE_ENV=test nyc mocha src/test/ --recursive --timeout 3000 || true",
     "lint": "eslint .",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
@@ -29,8 +29,7 @@
       "text-summary",
       "lcov"
     ],
-    "cache": true,
-    "all": true
+    "cache": true
   },
   "author": "",
   "license": "ISC",
@@ -57,7 +56,6 @@
     "gulp-uglify-es": "^0.1.3",
     "mocha": "^3.5.0",
     "nyc": "^11.3.0",
-    "proxyquire": "^1.8.0",
     "sinon": "^3.2.1"
   }
 }
