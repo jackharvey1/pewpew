@@ -1,5 +1,3 @@
-'use strict';
-
 const game = require('./game');
 const utils = require('./utils');
 const scoreboard = require('./scoreboard');

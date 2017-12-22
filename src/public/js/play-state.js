@@ -1,5 +1,3 @@
-'use strict';
-
 const game = require('./game');
 const config = require('../../config');
 const utils = require('./utils');

@@ -1,5 +1,3 @@
-'use strict';
-
 const config = require('../../config');
 const game = module.exports = new Phaser.Game(
     Math.min(window.innerWidth, config.world.width),

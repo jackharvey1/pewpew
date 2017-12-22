@@ -1,5 +1,3 @@
-'use strict';
-
 const activeClass = 'Scoreboard--active';
 let board;
 
