@@ -245,8 +245,8 @@ module.exports = {
         "space-unary-ops": "error",
         "spaced-comment": "error",
         "strict": [
-            "off",
-            "global"
+            "error",
+            "never"
         ],
         "symbol-description": "error",
         "template-curly-spacing": "error",
