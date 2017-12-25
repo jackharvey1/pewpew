@@ -3,22 +3,22 @@ const utils = require('../../common/utils');
 const scoreboard = require('./scoreboard');
 let socket;
 
-module.exports.init = function () {
-    socket = io.connect(window.location.host);
+module.exports.init = function (playerName) {
+    socket = io.connect(window.location.host, { query: { playerName } });
     const state = game.state.getCurrentState();
     const players = state.players;
     const player = state.player;
 
     socket.on('server:player-list', gameState => {
-        Object.keys(gameState).forEach(playerId => {
-            state.addPlayer(playerId, gameState[playerId].coordinates);
-            scoreboard.addPlayer(playerId);
+        Object.values(gameState).forEach(({ id, name, coordinates }) => {
+            state.addPlayer(id, name, coordinates);
+            scoreboard.addPlayer(id, name);
         });
     });
 
     socket.on('server:player-id', playerId => {
         state.player.id = playerId;
-        scoreboard.addPlayer(playerId);
+        scoreboard.addPlayer(playerId, playerName);
         beginClientTick();
         beginListeningToServer();
     });
@@ -60,9 +60,9 @@ function beginClientTick() {
 function beginListeningToServer() {
     const state = game.state.getCurrentState();
 
-    socket.on('server:player-connected', playerId => {
-        state.addPlayer(playerId);
-        scoreboard.addPlayer(playerId);
+    socket.on('server:player-connected', ({ playerId, playerName }) => {
+        state.addPlayer(playerId, playerName);
+        scoreboard.addPlayer(playerId, playerName);
     });
 
     socket.on('server:player-disconnected', playerId => {

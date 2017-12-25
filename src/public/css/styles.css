@@ -1,0 +1,92 @@
+body {
+    margin: 0;
+}
+
+.Modal {
+    position: absolute;
+    display: none;
+
+    background-color: rgba(0, 0, 0, 0.6);
+    border: 5px solid ghostwhite;
+
+    font-family: monospace;
+    font-size: 18px;
+    color: white;
+}
+
+.Modal-scoreboard {
+    width: calc(100% - 100px);
+    height: calc(100% - 100px);
+
+    left: 50px;
+    top: 50px;
+}
+
+.Modal-menu {
+    left: calc(50% - 125px);
+    top: calc(50% - 175px);
+    width: 250px;
+    height: 120px;
+}
+
+.Modal-menu > * {
+    box-sizing: border-box;
+}
+
+.Modal-input {
+    position: relative;
+
+    top: 25px;
+    left: calc(50% - (calc(100% - 50px) / 2));
+
+    width: calc(100% - 50px);
+    height: 30px;
+    padding: 0 6px;
+
+    border: 2px solid white;
+    color: white;
+    background: black;
+
+    margin: auto;
+
+    font-family: monospace;
+    font-size: 16px;
+}
+
+.Modal-input:focus {
+    outline: none;
+}
+
+.Modal-button {
+    display: flex;
+    position: absolute;
+
+    left: 25px;
+    bottom: 25px;
+
+    width: 200px;
+    height: 30px;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid ghostwhite;
+}
+
+.Modal-button:hover {
+    background-color: grey;
+}
+
+.Modal--active {
+    display: block;
+}
+
+.Modal-scoreboardRow {
+    border-bottom: 1px solid ghostwhite;
+    padding: 10px 20px;
+}
+
+.Modal--right {
+    float: right;
+    padding-left: 10px;
+}

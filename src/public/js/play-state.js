@@ -5,73 +5,29 @@ const client = require('./client');
 const scoreboard = require('./scoreboard');
 const Player = require('./player');
 
-const PlayState = function () {
-    this.shots = [];
-};
-
-let arrows,
+let playerName,
+    arrows,
     wasd,
     jumpButton,
     scoreboardButton;
 
-PlayState.prototype.preload = function () {
-    this.game.stage.disableVisibilityChange = true;
-    this.game.world.setBounds(0, 0, config.world.width, config.world.height);
-    this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
-    this.game.load.image('cloud', 'assets/cloud.png', 100, 60);
-    game.input.mouse.capture = true;
+const PlayState = function () {
+    this.shots = [];
+};
 
-    scoreboard.init();
+PlayState.prototype.init = function (name) {
+    playerName = name;
 };
 
 PlayState.prototype.create = function () {
-    this.player = new Player();
+    this.player = new Player(playerName);
     this.players = {};
-    this.game.stage.backgroundColor = config.world.colour;
-
-    setUpCameraFollow.call(this);
-    client.init();
-    createClouds.call(this);
-    instantiatePhysics.call(this);
-    setUpInputs.call(this);
-};
-
-function setUpCameraFollow() {
     this.game.camera.follow(this.player.sprite);
-    this.game.camera.deadzone = new Phaser.Rectangle(
-        200,
-        0,
-        window.innerWidth - 400,
-        window.innerHeight - 200
-    );
-}
+    this.setUpInputs();
 
-function createClouds() {
-    for (let i = 0; i < 10; i++) {
-        const x = Math.random() * this.game.world.bounds.width;
-        const y = Math.random() * (this.game.world.bounds.height - 600);
-        this.game.add.image(x, y, 'cloud');
-    }
-}
-
-function instantiatePhysics() {
-    this.game.physics.startSystem(Phaser.Physics.ARCADE);
-    this.game.physics.arcade.gravity.y = config.gravity;
-}
-
-function setUpInputs() {
-    arrows = this.game.input.keyboard.createCursorKeys();
-    wasd = {
-        up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
-        down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
-        left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
-        right: this.game.input.keyboard.addKey(Phaser.Keyboard.D)
-    };
-    jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    scoreboardButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
-    scoreboardButton.onDown.add(scoreboard.show, this);
-    scoreboardButton.onUp.add(scoreboard.hide, this);
-}
+    client.init(playerName);
+    scoreboard.init();
+};
 
 PlayState.prototype.update = function () {
     this.fadeBeams();
@@ -99,13 +55,22 @@ PlayState.prototype.update = function () {
     }
 };
 
-PlayState.prototype.addPlayer = function (playerId, coordinates) {
-    const newPlayer = new Player(playerId);
+PlayState.prototype.setUpInputs = function () {
+    arrows = this.game.input.keyboard.createCursorKeys();
+    wasd = {
+        up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+        down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+        left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+        right: this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+    };
+    jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    scoreboardButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
+    scoreboardButton.onDown.add(scoreboard.show, this);
+    scoreboardButton.onUp.add(scoreboard.hide, this);
+};
 
-    if (coordinates) {
-        newPlayer.sprite.x = coordinates.x;
-        newPlayer.sprite.y = coordinates.y;
-    }
+PlayState.prototype.addPlayer = function (playerId, playerName, coordinates) {
+    const newPlayer = new Player(playerName, playerId, coordinates);
 
     this.players[playerId] = newPlayer;
 };
