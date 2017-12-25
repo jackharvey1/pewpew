@@ -32,9 +32,23 @@ module.exports.updatePlayerLatency = function (id, latency) {
     }
 };
 
+module.exports.update = function (players) {
+    Object.keys(players).forEach(playerId => {
+        const player = players[playerId];
+        const row = document.getElementById(playerId);
+        row.innerHTML = generateCells(playerId, player.kills, player.deaths, player.latency);
+    });
+};
+
 function generateRow(id) {
     return `<div id=${id} class="Scoreboard-row">
-        <span>${id}</span>
-        <span class="Scoreboard-latency"></span>
+        ${generateCells(id, 0, 0, 0)}
     </div>`;
+}
+
+function generateCells(id, kills, deaths, latency) {
+    return `<span>${id}</span>
+        <span class="Scoreboard--right">${latency}</span>
+        <span class="Scoreboard--right">${deaths}</span>
+        <span class="Scoreboard--right">${kills}</span>`;
 }

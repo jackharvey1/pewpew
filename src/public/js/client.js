@@ -1,11 +1,13 @@
 const game = require('./game');
-const utils = require('./utils');
+const utils = require('../../common/utils');
 const scoreboard = require('./scoreboard');
 let socket;
 
 module.exports.init = function () {
     socket = io.connect(window.location.host);
     const state = game.state.getCurrentState();
+    const players = state.players;
+    const player = state.player;
 
     socket.on('server:player-list', gameState => {
         Object.keys(gameState).forEach(playerId => {
@@ -22,11 +24,15 @@ module.exports.init = function () {
     });
 
     socket.on('server:player-latency', ({ id, latency }) => {
-        scoreboard.updatePlayerLatency(id, latency);
+        if (id === player.id) {
+            player.latency = latency;
+        } else if (players[id]) {
+            state.players[id].latency = latency;
+        }
     });
 
     socket.on('ding', timeSent => {
-        const currentUnixTime = +(new Date());
+        const currentUnixTime = utils.timestamp();
         socket.emit('dong', currentUnixTime - timeSent);
     });
 };
@@ -43,8 +49,8 @@ function beginClientTick() {
                 y: player.sprite.body.velocity.y || 0
             },
             coordinates: {
-                x: player.sprite.x,
-                y: player.sprite.y
+                x: player.sprite.x || 0,
+                y: player.sprite.y || 0
             }
         };
         socket.emit('client:tick', msg);
@@ -67,20 +73,37 @@ function beginListeningToServer() {
     socket.on('server:tick', handleServerTick);
 
     socket.on('server:shot', data => {
-        state.createShot(data.x, data.y, data.time, data.direction);
+        state.drawShot(data.originX, data.originY, data.endX, data.endY);
     });
 
     socket.on('server:corrections', handleCorrectionData);
+
+    socket.on('server:player-death', handlePlayerDeath);
 }
 
 function handleServerTick(data) {
     const state = game.state.getCurrentState();
     const players = state.players;
+    const player = state.player;
 
     Object.keys(data).forEach(id => {
+        if (player.id === id) {
+            player.health.points = data[id].health;
+            player.health.updateHealthBar();
+
+            player.kills = data[id].kills;
+            player.deaths = data[id].deaths;
+        }
+
         if (players[id]) {
             players[id].sprite.body.velocity.x = data[id].velocity.x;
             players[id].sprite.body.velocity.y = data[id].velocity.y;
+
+            players[id].kills = data[id].kills;
+            players[id].deaths = data[id].deaths;
+
+            players[id].health.points = data[id].health;
+            players[id].health.updateHealthBar();
 
             if (data[id].facing === 'left') {
                 players[id].faceLeft();
@@ -97,6 +120,8 @@ function handleServerTick(data) {
             }
         }
     });
+
+    scoreboard.update(Object.assign({}, { [player.id]: player }, players));
 }
 
 function handleCorrectionData(data) {
@@ -133,6 +158,19 @@ function handleCorrectionData(data) {
     });
 }
 
-module.exports.transmitShot = function (x, y, direction) {
-    socket.emit('client:shot', { x, y, direction });
+function handlePlayerDeath(id) {
+    const state = game.state.getCurrentState();
+    const players = state.players;
+    const player = state.player;
+
+    if (players[id]) {
+        players[id].respawn();
+    } else if (player.id === id) {
+        player.respawn();
+    }
+}
+
+module.exports.transmitShot = function (originX, originY, endX, endY) {
+    const time = utils.timestamp();
+    socket.emit('client:shot', { originX, originY, endX, endY, time });
 };

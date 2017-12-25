@@ -1,10 +1,16 @@
-module.exports.extrapolateOrdinate = function (oldOrdinate, ordinateVelocity, time) {
-    const currentUnixTime = +(new Date());
+const timestamp = () => +(new Date());
+
+function extrapolateOrdinate(oldOrdinate, ordinateVelocity, time, direction) {
+    if (direction === 'left') {
+        ordinateVelocity = -Math.abs(ordinateVelocity);
+    }
+
+    const currentUnixTime = timestamp();
     const timeDifference = (currentUnixTime - time) / 1000;
     return oldOrdinate + (ordinateVelocity * timeDifference);
-};
+}
 
-module.exports.getIntersectionWithWorldEdge = function (
+function getIntersectionWithWorldEdge(
     { centreX, centreY },
     { pointX, pointY },
     { worldWidth, worldHeight }
@@ -48,9 +54,9 @@ module.exports.getIntersectionWithWorldEdge = function (
     }
 
     return { edgeX, edgeY };
-};
+}
 
-module.exports.getIntersectionWithCircle = function (
+function getIntersectionWithCircle(
     { centreX, centreY },
     { pointX, pointY },
     radius
@@ -60,7 +66,7 @@ module.exports.getIntersectionWithCircle = function (
         circleX: (coefficient * (pointX - centreX)) + centreX,
         circleY: (coefficient * (pointY - centreY)) + centreY
     };
-};
+}
 
 function getLengthOfLine(Ax, Ay, Bx, By) {
     const xLength = (Ax - Bx) ** 2;
@@ -85,3 +91,12 @@ function getGradient(Ax, Ay, Bx, By) {
 function getYIntercept(x, y, m) {
     return y - (m * x);
 }
+
+module.exports = {
+    extrapolateOrdinate,
+    timestamp,
+    getIntersectionWithWorldEdge,
+    getIntersectionWithCircle,
+    getLengthOfLine,
+    getGradient
+};

@@ -5,14 +5,7 @@ function Health() {
     this.points = 100;
 
     this.bar = game.make.graphics();
-    this.bar.beginFill(this.calculateBarColour());
-    this.bar.drawRect(
-        config.healthBar.x,
-        config.healthBar.y,
-        config.healthBar.width,
-        config.healthBar.height
-    );
-    this.bar.endFill();
+    this.updateHealthBar();
 }
 
 Health.prototype.calculateBarColour = function () {
@@ -23,6 +16,23 @@ Health.prototype.calculateBarColour = function () {
     redComponent = redComponent.toUpperCase();
     greenComponent = greenComponent.toUpperCase();
     return parseInt(`${redComponent}${greenComponent}00`, 16);
+};
+
+Health.prototype.updateHealthBar = function () {
+    this.bar.clear();
+    this.bar.beginFill(this.calculateBarColour());
+    this.bar.drawRect(
+        config.healthBar.x,
+        config.healthBar.y,
+        config.healthBar.width * (this.points / 100),
+        config.healthBar.height
+    );
+    this.bar.endFill();
+};
+
+Health.prototype.reset = function () {
+    this.points = 100;
+    this.updateHealthBar();
 };
 
 module.exports = Health;
