@@ -3,7 +3,7 @@ const socketIo = require('socket.io');
 const omit = require('lodash/omit');
 const utils = require('../common/utils');
 const config = require('../config');
-const logger = require('../common/logger');
+const logger = require('../lib/logger');
 const damage = require('./damage');
 const GameState = require('./game-state');
 

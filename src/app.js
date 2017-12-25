@@ -3,7 +3,7 @@ const app = express();
 const httpServer = require('http').createServer(app);
 const morgan = require('morgan');
 const path = require('path');
-const logger = require('./common/logger');
+const logger = require('./lib/logger');
 const Server = require('./lib/server');
 
 app.use(morgan('combined'));
