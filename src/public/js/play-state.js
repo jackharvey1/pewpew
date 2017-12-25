@@ -9,9 +9,9 @@ const PlayState = function () {
     this.shots = [];
 };
 
-let cursors,
+let arrows,
+    wasd,
     jumpButton,
-    fireButton,
     scoreboardButton;
 
 PlayState.prototype.preload = function () {
@@ -20,6 +20,7 @@ PlayState.prototype.preload = function () {
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
     this.game.load.image('cloud', 'assets/cloud.png', 100, 60);
     this.game.load.image('shot', 'assets/shot.png', config.shot.diameter, config.shot.diameter);
+    game.input.mouse.capture = true;
 
     scoreboard.init();
 };
@@ -60,9 +61,14 @@ function instantiatePhysics() {
 }
 
 function setUpInputs() {
-    cursors = this.game.input.keyboard.createCursorKeys();
+    arrows = this.game.input.keyboard.createCursorKeys();
+    wasd = {
+        up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+        down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+        left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+        right: this.game.input.keyboard.addKey(Phaser.Keyboard.D)
+    };
     jumpButton = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    fireButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Z);
     scoreboardButton = this.game.input.keyboard.addKey(Phaser.Keyboard.Q);
     scoreboardButton.onDown.add(scoreboard.show, this);
     scoreboardButton.onUp.add(scoreboard.hide, this);
@@ -71,9 +77,9 @@ function setUpInputs() {
 PlayState.prototype.update = function () {
     this.fadeBeams();
 
-    if (cursors.left.isDown) {
+    if (arrows.left.isDown || wasd.left.isDown) {
         this.player.moveLeft();
-    } else if (cursors.right.isDown) {
+    } else if (arrows.right.isDown || wasd.right.isDown) {
         this.player.moveRight();
     } else {
         this.player.stop();
@@ -81,11 +87,15 @@ PlayState.prototype.update = function () {
 
     this.player.animateWalking();
 
-    if (jumpButton.justPressed()) {
+    if (
+        jumpButton.justPressed() ||
+        arrows.up.justPressed() ||
+        wasd.up.justPressed()
+    ) {
         this.player.jump();
     }
 
-    if (fireButton.isDown) {
+    if (game.input.activePointer.leftButton.isDown) {
         this.player.fire();
     }
 };
