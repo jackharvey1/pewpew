@@ -1,14 +1,19 @@
 <html>
     <head>
-        <style> * { margin: 0; } </style>
         <script type="text/javascript" src="js/phaser.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
         <script type="text/javascript" src="js/main.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="css/scoreboard.css"></link>
+        <link rel="stylesheet" type="text/css" href="css/styles.css"></link>
     </head>
     <body>
-        <div id="scoreboard" class="Scoreboard">
-            <div class="Scoreboard-row"></div>
+        <div id="menu" class="Modal Modal-menu">
+            <input id="name" class="Modal-input" type="text" placeholder="Name"></input>
+            <div id="start" class="Modal-button">
+                <p>
+                    Play
+                </p>
+            </div>
         </div>
+        <div id="scoreboard" class="Modal Modal-scoreboard"></div>
     </body>
 </html>

@@ -3,19 +3,20 @@ const config = require('../../config');
 const utils = require('../../common/utils');
 const Health = require('./health');
 
-const Player = function (playerId) {
-    this.create();
-
+const Player = function (playerName, playerId, coordinates) {
     this.id = playerId;
+    this.name = playerName;
     this.kills = 0;
     this.deaths = 0;
     this.latency = 999;
     this.facing = 'left';
     this.moving = '';
     this.hasDoubleJumped = true;
+
+    this.create(coordinates);
 };
 
-Player.prototype.create = function () {
+Player.prototype.create = function (coordinates) {
     const sprite = game.add.sprite(config.player.startingX, config.player.startingY, 'player');
 
     sprite.animations.add('move', [0, 1], 10, true);
@@ -29,7 +30,20 @@ Player.prototype.create = function () {
     sprite.nextFireTime = 0;
 
     this.health = new Health();
+
+    const nameTagX = -config.player.width / 2;
+    const nameTagY = (-config.player.height / 2) - config.nameTag.padding;
+    const nameTagWidth = config.player.width;
+    this.nameTag = game.add.text(0, 0, this.name, config.nameTag.fontStyling);
+    this.nameTag.setTextBounds(nameTagX, nameTagY, nameTagWidth);
+
+    sprite.addChild(this.nameTag);
     sprite.addChild(this.health.bar);
+
+    if (coordinates) {
+        sprite.x = coordinates.x;
+        sprite.y = coordinates.y;
+    }
 
     this.sprite = sprite;
 };
@@ -38,6 +52,26 @@ Player.prototype.respawn = function () {
     this.sprite.x = config.player.startingX;
     this.sprite.y = config.player.startingY;
     this.health.reset();
+};
+
+Player.prototype.faceLeft = function () {
+    if (this.facing !== 'left') {
+        this.sprite.scale.x = 1;
+        this.health.bar.scale.x = 1;
+        this.nameTag.scale.x = 1;
+
+        this.facing = 'left';
+    }
+};
+
+Player.prototype.faceRight = function () {
+    if (this.facing !== 'right') {
+        this.sprite.scale.x = -1;
+        this.health.bar.scale.x = -1;
+        this.nameTag.scale.x = -1;
+
+        this.facing = 'right';
+    }
 };
 
 Player.prototype.moveLeft = function () {
@@ -64,20 +98,6 @@ Player.prototype.animateWalking = function () {
     } else {
         this.sprite.animations.stop();
         this.sprite.animations.frame = 0;
-    }
-};
-
-Player.prototype.faceLeft = function () {
-    if (this.facing !== 'left') {
-        this.sprite.scale.x = 1;
-        this.facing = 'left';
-    }
-};
-
-Player.prototype.faceRight = function () {
-    if (this.facing !== 'right') {
-        this.sprite.scale.x = -1;
-        this.facing = 'right';
     }
 };
 

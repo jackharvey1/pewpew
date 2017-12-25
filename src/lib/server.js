@@ -18,12 +18,17 @@ Server.prototype.setUp = function (httpServer) {
     io.on('connection', socket => {
         logger.log(`${socket.id} connected`);
 
-        this.gameState.addPlayer(socket.id);
+        const playerName = socket.handshake.query.playerName;
+
+        this.gameState.addPlayer(socket.id, playerName);
 
         socket.emit('server:player-id', socket.id);
         socket.emit('server:player-list', omit(this.gameState.players, socket.id));
 
-        socket.broadcast.emit('server:player-connected', socket.id);
+        socket.broadcast.emit('server:player-connected', {
+            playerId: socket.id,
+            playerName: playerName
+        });
 
         socket.on('disconnect', () => this.handleSocketDisconnect(socket));
 
@@ -36,7 +41,10 @@ Server.prototype.setUp = function (httpServer) {
 
     setInterval(this.transmitTicks.bind(this), config.server.tickInterval);
 
-    setInterval(this.transmitCorrections.bind(this), config.server.correctionsInterval);
+    setInterval(
+        this.transmitCorrections.bind(this),
+        config.server.correctionsInterval
+    );
 
     setInterval(this.handlePVP.bind(this), config.server.damageInterval);
 

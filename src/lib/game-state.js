@@ -5,9 +5,10 @@ function GameState() {
     this.players = {};
 }
 
-GameState.prototype.addPlayer = function (socketId) {
+GameState.prototype.addPlayer = function (socketId, playerName) {
     this.players[socketId] = {
         id: socketId,
+        name: playerName,
         shots: [],
         nextFireTime: 0,
         health: 100,

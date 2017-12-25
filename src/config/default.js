@@ -23,6 +23,16 @@ module.exports.healthBar = {
     width: module.exports.player.width
 };
 
+module.exports.nameTag = {
+    padding: 22,
+    fontStyling: {
+        font: '9pt Tahoma',
+        fill: 'white',
+        boundsAlignH: 'center',
+        boundsAlignV: 'middle'
+    }
+};
+
 module.exports.server = {
     tickInterval: 10,
     correctionsInterval: 50,

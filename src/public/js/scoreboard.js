@@ -1,4 +1,4 @@
-const activeClass = 'Scoreboard--active';
+const activeClass = 'Modal--active';
 let board;
 
 module.exports.init = function () {
@@ -13,8 +13,8 @@ module.exports.hide = function () {
     board.className = board.className.replace(` ${activeClass}`, '');
 };
 
-module.exports.addPlayer = function (id) {
-    board.insertAdjacentHTML('beforeend', generateRow(id));
+module.exports.addPlayer = function (id, name) {
+    board.insertAdjacentHTML('beforeend', generateRow(id, name));
 };
 
 module.exports.removePlayer = function (id) {
@@ -24,31 +24,23 @@ module.exports.removePlayer = function (id) {
     }
 };
 
-module.exports.updatePlayerLatency = function (id, latency) {
-    const row = document.getElementById(id);
-    if (row) {
-        const latencyElement = row.getElementsByClassName('Scoreboard-latency')[0];
-        latencyElement.textContent = latency;
-    }
-};
-
 module.exports.update = function (players) {
-    Object.keys(players).forEach(playerId => {
-        const player = players[playerId];
-        const row = document.getElementById(playerId);
-        row.innerHTML = generateCells(playerId, player.kills, player.deaths, player.latency);
+    Object.values(players).forEach(({ id, name }) => {
+        const player = players[id];
+        const row = document.getElementById(id);
+        row.innerHTML = generateCells(name, player.kills, player.deaths, player.latency);
     });
 };
 
-function generateRow(id) {
-    return `<div id=${id} class="Scoreboard-row">
-        ${generateCells(id, 0, 0, 0)}
+function generateRow(id, name) {
+    return `<div id=${id} class="Modal-scoreboardRow">
+        ${generateCells(name, 0, 0, 0)}
     </div>`;
 }
 
-function generateCells(id, kills, deaths, latency) {
-    return `<span>${id}</span>
-        <span class="Scoreboard--right">${latency}</span>
-        <span class="Scoreboard--right">${deaths}</span>
-        <span class="Scoreboard--right">${kills}</span>`;
+function generateCells(name, kills, deaths, latency) {
+    return `<span>${name}</span>
+        <span class="Modal--right">${latency}</span>
+        <span class="Modal--right">${deaths}</span>
+        <span class="Modal--right">${kills}</span>`;
 }
