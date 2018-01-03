@@ -19,7 +19,6 @@ PlayState.prototype.preload = function () {
     this.game.world.setBounds(0, 0, config.world.width, config.world.height);
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
     this.game.load.image('cloud', 'assets/cloud.png', 100, 60);
-    this.game.load.image('shot', 'assets/shot.png', config.shot.diameter, config.shot.diameter);
     game.input.mouse.capture = true;
 
     scoreboard.init();
