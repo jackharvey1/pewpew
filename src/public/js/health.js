@@ -19,14 +19,14 @@ Health.prototype.calculateBarColour = function () {
 };
 
 Health.prototype.updateHealthBar = function () {
+    const x = -config.player.width / 2;
+    const y = (-config.player.height / 2) - config.healthBar.padding;
+    const width = config.healthBar.width * (this.points / 100);
+    const height = config.healthBar.height;
+
     this.bar.clear();
     this.bar.beginFill(this.calculateBarColour());
-    this.bar.drawRect(
-        config.healthBar.x,
-        config.healthBar.y,
-        config.healthBar.width * (this.points / 100),
-        config.healthBar.height
-    );
+    this.bar.drawRect(x, y, width, height);
     this.bar.endFill();
 };
 
