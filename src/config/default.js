@@ -4,17 +4,23 @@ module.exports.world = {
     colour: 0x4488CC
 };
 
-module.exports.shot = {
-    delay: 100,
-    colour: 0xFFFFFF
-};
-
 module.exports.player = {
     width: 32,
     height: 48,
     velocity: 500,
     startingX: module.exports.world.width / 2,
     startingY: module.exports.world.height / 2
+};
+
+module.exports.shot = {
+    delay: 100,
+    colour: 0xFFFFFF
+};
+
+module.exports.cloud = {
+    count: 10,
+    width: 100,
+    height: 60
 };
 
 module.exports.healthBar = {

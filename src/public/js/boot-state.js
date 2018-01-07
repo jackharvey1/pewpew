@@ -10,7 +10,7 @@ BootState.prototype.preload = function () {
 
     this.game.world.setBounds(0, 0, config.world.width, config.world.height);
     this.game.load.spritesheet('player', 'assets/player.png', config.player.width, config.player.height);
-    this.game.load.image('cloud', 'assets/cloud.png', 100, 60);
+    this.game.load.image('cloud', 'assets/cloud.png', config.cloud.width, config.cloud.height);
 
     this.game.input.mouse.capture = true;
 };
@@ -34,7 +34,7 @@ BootState.prototype.setUpCameraFollow = function () {
 };
 
 BootState.prototype.createClouds = function () {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < config.cloud.count; i++) {
         const x = Math.random() * this.game.world.bounds.width;
         const y = Math.random() * (this.game.world.bounds.height - 600);
         this.game.add.image(x, y, 'cloud');
