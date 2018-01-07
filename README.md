@@ -6,7 +6,6 @@ This is a 2D multiplayer deathmatch game utilising socket.io for server-client c
 
 # Todo
 ## Features
-- Allow players to define their nickname, and display it above their heads
 - Allow users to select key configurations
 - Improve map
   - Platforms
