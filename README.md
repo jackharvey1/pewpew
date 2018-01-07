@@ -9,13 +9,12 @@ This is a 2D multiplayer deathmatch game utilising socket.io for server-client c
 - Allow users to select key configurations
 - Improve map
   - Platforms
-
-## Improvements
-- Improve test coverage
 - Resize canvas on browser resize
-- Implementation details
-  - Use server time to improve synchronisation
-  - Merge `state.player` and `state.players` to improve code readability
-  - Can remove checks if player with id exists by fixing socket.io's issue with multiple connections
-  - Health doesn't need to be an class
-  - Clients are currently the source of truth on their position
+
+## Tech Debt
+- Test coverage
+- Use server time to improve synchronisation
+- Merge `state.player` and `state.players` to improve code readability
+- Can remove checks if player with id exists by fixing socket.io's issue with multiple connections
+- Health doesn't need to be an class
+- Clients are currently the source of truth on their position
