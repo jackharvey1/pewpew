@@ -13,7 +13,7 @@ module.exports.player = {
 };
 
 module.exports.shot = {
-    delay: 100,
+    delay: 350,
     colour: 0xFFFFFF
 };
 
