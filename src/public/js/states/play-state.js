@@ -1,8 +1,8 @@
-const config = require('../../../config');
-const utils = require('../../../common/utils');
-const client = require('../client');
-const scoreboard = require('../scoreboard');
+const Client = require('../client');
 const Player = require('../player');
+const utils = require('../../../common/utils');
+const config = require('../../../config');
+const scoreboard = require('../scoreboard');
 
 let playerName,
     arrows,
@@ -24,7 +24,7 @@ PlayState.prototype.create = function () {
     this.game.camera.follow(this.player.sprite);
     this.setUpInputs();
 
-    client.init(playerName);
+    this.client = new Client(this.game, playerName);
     scoreboard.init();
 };
 
@@ -89,14 +89,14 @@ PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
         pointY: mouseY
     };
 
-    const { circleX, circleY } = utils.getIntersectionWithCircle(
+    const { originX, originY } = utils.getIntersectionWithCircle(
         playerPoint,
         mousePoint,
         config.player.height
     );
 
-    const { edgeX, edgeY } = utils.getIntersectionWithWorldEdge(
-        { centreX: circleX, centreY: circleY },
+    const { endX, endY } = utils.getIntersectionWithWorldEdge(
+        { centreX: originX, centreY: originY },
         mousePoint,
         {
             worldWidth: config.world.width,
@@ -104,17 +104,17 @@ PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
         }
     );
 
-    this.drawShot(circleX, circleY, edgeX, edgeY);
+    this.drawShot({ originX, originY, endX, endY });
 
-    client.transmitShot(circleX, circleY, edgeX, edgeY);
+    this.client.transmitShot({ originX, originY, endX, endY });
 };
 
-PlayState.prototype.drawShot = function (circleX, circleY, edgeX, edgeY) {
+PlayState.prototype.drawShot = function ({ originX, originY, endX, endY }) {
     const laser = this.game.add.graphics(0, 0);
 
     laser.lineStyle(1, config.shot.colour, 1);
-    laser.moveTo(circleX, circleY);
-    laser.lineTo(edgeX, edgeY);
+    laser.moveTo(originX, originY);
+    laser.lineTo(endX, endY);
 
     this.shots.push(laser);
 };

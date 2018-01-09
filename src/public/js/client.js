@@ -1,98 +1,102 @@
-const game = require('./game');
 const utils = require('../../common/utils');
 const scoreboard = require('./scoreboard');
-let socket;
 
-module.exports.init = function (playerName) {
-    socket = io.connect(window.location.host, { query: { playerName } });
-    const state = game.state.getCurrentState();
-    const players = state.players;
-    const player = state.player;
+function Client(game, playerName) {
+    this.socket = io.connect(window.location.host, { query: { playerName } });
 
-    socket.on('server:player-list', gameState => {
-        Object.values(gameState).forEach(({ id, name, coordinates }) => {
-            state.addPlayer(id, name, coordinates);
-            scoreboard.addPlayer(id, name);
-        });
-    });
+    this.playerName = playerName;
+    this.state = game.state.getCurrentState();
+    this.player = this.state.player;
 
-    socket.on('server:player-id', playerId => {
-        state.player.id = playerId;
-        scoreboard.addPlayer(playerId, playerName);
-        beginClientTick();
-        beginListeningToServer();
-    });
+    this.setUp();
+}
 
-    socket.on('server:player-latency', ({ id, latency }) => {
-        if (id === player.id) {
-            player.latency = latency;
-        } else if (players[id]) {
-            state.players[id].latency = latency;
-        }
-    });
+Client.prototype.setUp = function () {
+    this.socket.on('server:player-list', this.addAlreadyConnectedPlayer.bind(this));
 
-    socket.on('ding', timeSent => {
-        const currentUnixTime = utils.timestamp();
-        socket.emit('dong', currentUnixTime - timeSent);
+    this.socket.on('server:player-id', this.setUpPlayer.bind(this));
+
+    this.socket.on('server:player-latency', this.updateLatencies.bind(this));
+
+    this.socket.on('ding', this.respondToPing.bind(this));
+};
+
+Client.prototype.addAlreadyConnectedPlayer = function (gameState) {
+    Object.values(gameState).forEach(({ id, name, coordinates }) => {
+        this.state.addPlayer(id, name, coordinates);
+        scoreboard.addPlayer(id, name);
     });
 };
 
-function beginClientTick() {
-    const player = game.state.getCurrentState().player;
+Client.prototype.setUpPlayer = function (playerId) {
+    this.state.player.id = playerId;
+    scoreboard.addPlayer(playerId, this.playerName);
+    beginClientTick();
+    beginListeningToServer();
+};
 
+Client.prototype.updateLatencies = function ({ id, latency }) {
+    const players = this.state.players;
+    if (id === this.player.id) {
+        this.player.latency = latency;
+    } else if (players[id]) {
+        players[id].latency = latency;
+    }
+};
+
+Client.prototype.respondToPing = function (timeSent) {
+    const currentUnixTime = utils.timestamp();
+    this.socket.emit('dong', currentUnixTime - timeSent);
+};
+
+function beginClientTick() {
     setInterval(() => {
         const msg = {
-            facing: player.facing,
-            moving: player.moving,
+            facing: this.player.facing,
+            moving: this.player.moving,
             velocity: {
-                x: player.sprite.body.velocity.x || 0,
-                y: player.sprite.body.velocity.y || 0
+                x: this.player.sprite.body.velocity.x || 0,
+                y: this.player.sprite.body.velocity.y || 0
             },
             coordinates: {
-                x: player.sprite.x || 0,
-                y: player.sprite.y || 0
+                x: this.player.sprite.x || 0,
+                y: this.player.sprite.y || 0
             }
         };
-        socket.emit('client:tick', msg);
+        this.socket.emit('client:tick', msg);
     }, 10);
 }
 
-function beginListeningToServer() {
-    const state = game.state.getCurrentState();
-
-    socket.on('server:player-connected', ({ playerId, playerName }) => {
-        state.addPlayer(playerId, playerName);
+Client.prototype.beginListeningToServer = function () {
+    this.socket.on('server:player-connected', ({ playerId, playerName }) => {
+        this.state.addPlayer(playerId, playerName);
         scoreboard.addPlayer(playerId, playerName);
     });
 
-    socket.on('server:player-disconnected', playerId => {
-        state.removePlayer(playerId);
+    this.socket.on('server:player-disconnected', playerId => {
+        this.state.removePlayer(playerId);
         scoreboard.removePlayer(playerId);
     });
 
-    socket.on('server:tick', handleServerTick);
+    this.socket.on('server:tick', this.handleServerTick.bind(this));
 
-    socket.on('server:shot', data => {
-        state.drawShot(data.originX, data.originY, data.endX, data.endY);
-    });
+    this.socket.on('server:shot', this.state.drawShot.bind(this));
 
-    socket.on('server:corrections', handleCorrectionData);
+    this.socket.on('server:corrections', this.handleCorrectionData.bind(this));
 
-    socket.on('server:player-death', handlePlayerDeath);
-}
+    this.socket.on('server:player-death', this.handlePlayerDeath.bind(this));
+};
 
-function handleServerTick(data) {
-    const state = game.state.getCurrentState();
-    const players = state.players;
-    const player = state.player;
+Client.prototype.handleServerTick = function (data) {
+    const players = this.state.players;
 
     Object.keys(data).forEach(id => {
-        if (player.id === id) {
-            player.health.points = data[id].health;
-            player.health.updateHealthBar();
+        if (this.player.id === id) {
+            this.player.health.points = data[id].health;
+            this.player.health.updateHealthBar();
 
-            player.kills = data[id].kills;
-            player.deaths = data[id].deaths;
+            this.player.kills = data[id].kills;
+            this.player.deaths = data[id].deaths;
         }
 
         if (players[id]) {
@@ -121,12 +125,11 @@ function handleServerTick(data) {
         }
     });
 
-    scoreboard.update(Object.assign({}, { [player.id]: player }, players));
-}
+    scoreboard.update(Object.assign({}, { [this.player.id]: this.player }, players));
+};
 
-function handleCorrectionData(data) {
-    const state = game.state.getCurrentState();
-    const players = state.players;
+Client.prototype.handleCorrectionData = function (data) {
+    const players = this.state.players;
 
     Object.keys(data).forEach(id => {
         if (players[id]) {
@@ -156,21 +159,21 @@ function handleCorrectionData(data) {
             }
         }
     });
-}
+};
 
-function handlePlayerDeath(id) {
-    const state = game.state.getCurrentState();
-    const players = state.players;
-    const player = state.player;
+Client.prototype.handlePlayerDeath = function (id) {
+    const players = this.state.players;
 
     if (players[id]) {
         players[id].respawn();
-    } else if (player.id === id) {
-        player.respawn();
+    } else if (this.player.id === id) {
+        this.player.respawn();
     }
-}
-
-module.exports.transmitShot = function (originX, originY, endX, endY) {
-    const time = utils.timestamp();
-    socket.emit('client:shot', { originX, originY, endX, endY, time });
 };
+
+Client.prototype.transmitShot = function ({ originX, originY, endX, endY }) {
+    const time = utils.timestamp();
+    this.socket.emit('client:shot', { originX, originY, endX, endY, time });
+};
+
+module.exports = Client;
