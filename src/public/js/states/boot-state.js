@@ -1,4 +1,4 @@
-const config = require('../../config');
+const config = require('../../../config');
 
 // eslint-disable-next-line no-empty-function
 function BootState() { }
@@ -13,6 +13,9 @@ BootState.prototype.preload = function () {
     this.game.load.image('cloud', 'assets/cloud.png', config.cloud.width, config.cloud.height);
 
     this.game.input.mouse.capture = true;
+
+    this.game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
+    this.game.scale.setShowAll();
 };
 
 BootState.prototype.create = function () {

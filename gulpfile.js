@@ -12,10 +12,7 @@ gulp.task('build', ['js']);
 gulp.task('js', function () {
     return browserify({
         entries: [
-            './src/public/js/game.js',
-            './src/public/js/client.js',
-            './src/public/js/play-state.js',
-            './src/public/js/player.js'
+            './src/public/js/game.js'
         ],
         debug: true
     })

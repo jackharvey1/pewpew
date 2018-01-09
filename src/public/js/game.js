@@ -6,9 +6,9 @@ const game = module.exports = new Phaser.Game(
     Phaser.AUTO
 );
 
-const BootState = require('./boot-state');
-const MenuState = require('./menu-state');
-const PlayState = require('./play-state');
+const BootState = require('./states/boot-state');
+const MenuState = require('./states/menu-state');
+const PlayState = require('./states/play-state');
 
 game.state.add('boot', BootState);
 game.state.add('menu', MenuState);

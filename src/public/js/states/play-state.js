@@ -1,9 +1,8 @@
-const game = require('./game');
-const config = require('../../config');
-const utils = require('../../common/utils');
-const client = require('./client');
-const scoreboard = require('./scoreboard');
-const Player = require('./player');
+const config = require('../../../config');
+const utils = require('../../../common/utils');
+const client = require('../client');
+const scoreboard = require('../scoreboard');
+const Player = require('../player');
 
 let playerName,
     arrows,
@@ -50,7 +49,7 @@ PlayState.prototype.update = function () {
         this.player.jump();
     }
 
-    if (game.input.activePointer.leftButton.isDown) {
+    if (this.game.input.activePointer.leftButton.isDown) {
         this.player.fire();
     }
 };
@@ -111,7 +110,7 @@ PlayState.prototype.createShot = function (playerX, playerY, mouseX, mouseY) {
 };
 
 PlayState.prototype.drawShot = function (circleX, circleY, edgeX, edgeY) {
-    const laser = game.add.graphics(0, 0);
+    const laser = this.game.add.graphics(0, 0);
 
     laser.lineStyle(1, config.shot.colour, 1);
     laser.moveTo(circleX, circleY);

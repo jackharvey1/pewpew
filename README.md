@@ -9,7 +9,6 @@ This is a 2D multiplayer deathmatch game utilising socket.io for server-client c
 - Allow users to select key configurations
 - Improve map
   - Platforms
-- Resize canvas on browser resize
 
 ## Tech Debt
 - Test coverage
