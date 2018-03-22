@@ -10,7 +10,7 @@ This is a 2D multiplayer deathmatch game utilising socket.io for server-client c
 - Improve map
   - Platforms
 
-## Tech Debt
+## Issues
 - Test coverage
 - Use server time to improve synchronisation
 - Merge `state.player` and `state.players` to improve code readability
