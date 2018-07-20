@@ -1,7 +1,7 @@
 const Client = require('../client');
 const Player = require('../player');
 const utils = require('../../../common/utils');
-const config = require('../../../config');
+const config = require('../../../common/config');
 const scoreboard = require('../scoreboard');
 
 let playerName,

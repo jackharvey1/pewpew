@@ -1,4 +1,4 @@
-const GameState = require('../../../lib/game-state');
+const GameState = require('../../../../src/lib/game-state');
 
 describe('Testing Gamestate prototype', function () {
     it('Adds blank template for a player', function () {

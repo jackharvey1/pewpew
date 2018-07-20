@@ -1,4 +1,4 @@
-const isColliding = require('../../../lib/collisions');
+const isColliding = require('../../../../src/lib/collisions');
 
 describe('Collision detection', function () {
     const rectangle = {

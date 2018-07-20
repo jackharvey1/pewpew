@@ -1,4 +1,4 @@
-const config = require('../../config');
+const config = require('../../common/config');
 
 const game = module.exports = new Phaser.Game(
     Math.min(window.innerWidth, config.world.width),

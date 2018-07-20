@@ -1,4 +1,4 @@
-const config = require('../../../config');
+const config = require('../../../common/config');
 
 // eslint-disable-next-line no-empty-function
 function BootState() { }

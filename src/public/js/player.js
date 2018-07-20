@@ -1,5 +1,5 @@
 const game = require('./game');
-const config = require('../../config');
+const config = require('../../common/config');
 const utils = require('../../common/utils');
 const Health = require('./health');
 
@@ -29,7 +29,7 @@ Player.prototype.create = function (coordinates) {
 
     sprite.nextFireTime = 0;
 
-    this.health = new Health();
+    this.health = new Health(this.game.make.graphics());
 
     const nameTagX = -config.player.width / 2;
     const nameTagY = (-config.player.height / 2) - config.nameTag.padding;

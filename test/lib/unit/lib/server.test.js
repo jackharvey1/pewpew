@@ -1,5 +1,5 @@
-const Server = require('../../../lib/server');
-const config = require('../../../config');
+const Server = require('../../../../src/lib/server');
+const config = require('../../../../src/common/config');
 
 describe('Server logic', function () {
     let server,

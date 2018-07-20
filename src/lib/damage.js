@@ -1,5 +1,5 @@
 const isColliding = require('../lib/collisions');
-const config = require('../config');
+const config = require('../common/config');
 const utils = require('../common/utils');
 
 const sizeData = {

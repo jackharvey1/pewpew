@@ -23,7 +23,8 @@ module.exports.cloud = {
     height: 60
 };
 
-module.exports.healthBar = {
+module.exports.health = {
+    startingHealth: 100,
     padding: 12,
     height: 3,
     width: module.exports.player.width

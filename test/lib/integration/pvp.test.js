@@ -1,4 +1,4 @@
-const Server = require('../../lib/server');
+const Server = require('../../../src/lib/server');
 
 describe('PVP integration tests', function () {
     let server,

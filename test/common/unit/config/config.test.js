@@ -1,4 +1,4 @@
-const config = require('../../../config');
+const config = require('../../../../src/common/config');
 
 describe('Config', function () {
     const oldEnv = process.env.NODE_ENV;

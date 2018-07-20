@@ -1,4 +1,4 @@
-const extrapolateOrdinate = require('../../../common/utils').extrapolateOrdinate;
+const extrapolateOrdinate = require('../../../../src/common/utils').extrapolateOrdinate;
 
 describe('Extrapolating ordinates', function () {
     const scenarios = [

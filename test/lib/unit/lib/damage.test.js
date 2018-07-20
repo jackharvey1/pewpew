@@ -1,4 +1,4 @@
-const damage = require('../../../lib/damage');
+const damage = require('../../../../src/lib/damage');
 
 describe('damage.js', function () {
     const attacker = {

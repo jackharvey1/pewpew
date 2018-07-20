@@ -12,27 +12,27 @@ function Client(game, playerName) {
 }
 
 Client.prototype.setUp = function () {
-    this.socket.on('server:player-list', this.addAlreadyConnectedPlayer.bind(this));
+    this.socket.on('server:player-list', this.addAlreadyConnectedPlayers.bind(this));
 
-    this.socket.on('server:player-id', this.setUpPlayer.bind(this));
+    this.socket.on('server:player-id', this.kickOff.bind(this));
 
     this.socket.on('server:player-latency', this.updateLatencies.bind(this));
 
     this.socket.on('ding', this.respondToPing.bind(this));
 };
 
-Client.prototype.addAlreadyConnectedPlayer = function (gameState) {
+Client.prototype.addAlreadyConnectedPlayers = function (gameState) {
     Object.values(gameState).forEach(({ id, name, coordinates }) => {
         this.state.addPlayer(id, name, coordinates);
         scoreboard.addPlayer(id, name);
     });
 };
 
-Client.prototype.setUpPlayer = function (playerId) {
+Client.prototype.kickOff = function (playerId) {
     this.state.player.id = playerId;
     scoreboard.addPlayer(playerId, this.playerName);
-    beginClientTick();
-    beginListeningToServer();
+    this.beginClientTick();
+    this.beginListeningToServer();
 };
 
 Client.prototype.updateLatencies = function ({ id, latency }) {
@@ -49,7 +49,7 @@ Client.prototype.respondToPing = function (timeSent) {
     this.socket.emit('dong', currentUnixTime - timeSent);
 };
 
-function beginClientTick() {
+Client.prototype.beginClientTick = function () {
     setInterval(() => {
         const msg = {
             facing: this.player.facing,
@@ -65,7 +65,7 @@ function beginClientTick() {
         };
         this.socket.emit('client:tick', msg);
     }, 10);
-}
+};
 
 Client.prototype.beginListeningToServer = function () {
     this.socket.on('server:player-connected', ({ playerId, playerName }) => {
